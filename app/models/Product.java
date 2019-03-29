@@ -25,6 +25,14 @@ public class Product extends Model {
     @Constraints.Required
     public String description;
 
+    public Product(Long id, @Constraints.Required String name, @Constraints.Required String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public Product() {
+    }
 }
 
 
