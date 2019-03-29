@@ -33,6 +33,8 @@ public class Product extends Model {
 
     public Product() {
     }
+
+
 }
 
 
