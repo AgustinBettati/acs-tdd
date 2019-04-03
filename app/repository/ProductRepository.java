@@ -7,6 +7,7 @@ import play.db.ebean.EbeanConfig;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
@@ -34,6 +35,14 @@ public class ProductRepository {
     public CompletionStage<Optional<Product>> getById(int id) {
         return supplyAsync(() ->
                 ebeanServer.find(Product.class).where().eq("id", id).findOneOrEmpty(), executionContext);
+    }
+
+    public CompletionStage<Product> insert(Product product) {
+        return supplyAsync(() -> {
+            product.id = UUID.randomUUID().getMostSignificantBits(); // not ideal, but it works
+            ebeanServer.insert(product);
+            return product;
+        }, executionContext);
     }
 
 }

@@ -34,6 +34,10 @@ public class Product extends Model {
     public Product() {
     }
 
+    public boolean validForInsertion() {
+        return name != null && description != null;
+    }
+
 
 }
 

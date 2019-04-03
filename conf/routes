@@ -4,6 +4,7 @@
 
 # Default path will just redirect to the computer list
 
+POST    /api/product              controllers.ProductsController.create(request: Request)
 GET     /api/product              controllers.ProductsController.getAllProducts(request: Request)
 GET     /api/product/:id          controllers.ProductsController.getProductById(id: Integer)
 
