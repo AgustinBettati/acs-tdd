@@ -1,42 +1,34 @@
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
 import controllers.routes;
 import io.ebean.Ebean;
 import io.ebean.Model;
 import models.Product;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.test.Helpers;
 import play.test.WithApplication;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import static junit.framework.TestCase.fail;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 import static play.mvc.Http.Status.OK;
-import static play.test.Helpers.*;
-import static play.mvc.Http.Status.*;
+import static play.test.Helpers.BAD_REQUEST;
+import static play.test.Helpers.CREATED;
+import static play.test.Helpers.NOT_FOUND;
 import static play.test.Helpers.contentAsString;
+import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.route;
+import static play.test.Helpers.running;
 
 
 public class ProductTest extends WithApplication {
-//    @Before
-//    public void setup() {
-//        Product product1 = new Product(10L, "un producto", "Mark Inc.");
-//        product1.save();
-//
-//    }
 
     @Test
     public void test001_obtainingPresentProductById() throws IOException {
@@ -53,6 +45,31 @@ public class ProductTest extends WithApplication {
         assertThat(savedProduct.id).isEqualTo(retrievedProduct.id);
         assertThat(savedProduct.name).isEqualTo(retrievedProduct.name);
         savedProduct.delete();
+    }
+
+    @Test
+    public void test001b_obtainingPresentProductById() {
+        running(fakeApplication(), () -> {
+            Product savedProduct = new Product(1L, "un producto", "Apple Inc.");
+            savedProduct.save();
+
+            Result result = route(app, routes.ProductsController.getProductById(1));
+            String s = contentAsString(result);
+            ObjectMapper objectMapper = new ObjectMapper();
+            Product retrievedProduct = null;
+            try {
+                retrievedProduct = objectMapper.readValue(s, new TypeReference<Product>() {
+                });
+            } catch (IOException e) {
+                System.out.println("failed test, could not read product value");
+                fail();
+            }
+
+            assertThat(result.status()).isEqualTo(OK);
+            assertThat(savedProduct.id).isEqualTo(retrievedProduct.id);
+            assertThat(savedProduct.name).isEqualTo(retrievedProduct.name);
+            savedProduct.delete();
+        });
     }
 
     @Test

@@ -36,7 +36,7 @@ public class ProductsController extends Controller {
         } else return CompletableFuture.supplyAsync(Results::badRequest);
     }
 
-    public CompletionStage<Result> getAllProducts(Http.Request request) {
+    public CompletionStage<Result> getAllProducts() {
         return productRepository.getAll().thenApplyAsync(list -> {
             JsonNode jsonNode = Json.toJson(list);
             return ok(jsonNode);
