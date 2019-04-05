@@ -43,7 +43,7 @@ public class ProductsController extends Controller {
         }, httpExecutionContext.current());
     }
 
-    public CompletionStage<Result> getProductById(int id) {
+    public CompletionStage<Result> getProductById(Long id) {
         return productRepository.getById(id).thenApplyAsync(optionalProduct -> {
             if (optionalProduct.isPresent()) {
                 return ok(Json.toJson(optionalProduct));

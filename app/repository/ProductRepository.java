@@ -32,7 +32,7 @@ public class ProductRepository {
                 ebeanServer.find(Product.class).findList(), executionContext);
     }
 
-    public CompletionStage<Optional<Product>> getById(int id) {
+    public CompletionStage<Optional<Product>> getById(Long id) {
         return supplyAsync(() ->
                 ebeanServer.find(Product.class).where().eq("id", id).findOneOrEmpty(), executionContext);
     }

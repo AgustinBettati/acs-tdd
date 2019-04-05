@@ -60,6 +60,37 @@ public class ProductTest extends WithApplication {
     }
 
     @Test
+    public void test004_postingProductAndRetrievingById() throws IOException {
+        Product newProduct = new Product(null, "new product", "Apple Inc.");
+        JsonNode jsonNode = Json.toJson(newProduct);
+        Http.RequestBuilder saveRequest = new Http.RequestBuilder().method("POST")
+                .bodyJson(jsonNode)
+                .uri(routes.ProductsController.create().url());
+        Result postResult = route(app, saveRequest);
+
+        assertThat(postResult.status()).isEqualTo(CREATED);
+
+        String postString = contentAsString(postResult);
+
+        System.out.println(postString);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Product createdProduct = objectMapper.readValue(postString, new TypeReference<Product>() {
+        });
+
+        Long idOfCreated = createdProduct.id;
+        Result getResult = route(app, controllers.routes.ProductsController.getProductById(idOfCreated));
+        String getString = contentAsString(getResult);
+        System.out.println(getString);
+        Product retrievedProduct = objectMapper.readValue(getString, new TypeReference<Product>() {
+        });
+
+        assertThat(getResult.status()).isEqualTo(OK);
+        assertThat(retrievedProduct.name).isEqualTo(newProduct.name);
+        assertThat(retrievedProduct.description).isEqualTo(newProduct.description);
+        newProduct.delete();
+    }
+
+    @Test
     public void listComputersOnTheFirstPage() throws IOException {
         List<Product> expectedProducts = addProductsToCatalog();
         ObjectMapper objectMapper = new ObjectMapper();

@@ -6,7 +6,7 @@
 
 POST    /api/product              controllers.ProductsController.create(request: Request)
 GET     /api/product              controllers.ProductsController.getAllProducts(request: Request)
-GET     /api/product/:id          controllers.ProductsController.getProductById(id: Integer)
+GET     /api/product/:id          controllers.ProductsController.getProductById(id: Long)
 
 
 # Map static resources from the /public folder to the /assets URL path
