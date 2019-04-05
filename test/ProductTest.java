@@ -6,6 +6,7 @@ import io.ebean.Ebean;
 import io.ebean.Model;
 import models.Product;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Http;
@@ -13,6 +14,7 @@ import play.mvc.Result;
 import play.test.WithApplication;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,46 +31,38 @@ import static play.test.Helpers.running;
 
 
 public class ProductTest extends WithApplication {
+    private Product savedProduct;
+    ObjectMapper objectMapper;
+
+    @Before
+    public void setup(){
+        objectMapper = new ObjectMapper();
+
+        savedProduct = new Product(1L, "un producto", "Apple Inc.");
+        savedProduct.save();
+    }
 
     @Test
     public void test001_obtainingPresentProductById() throws IOException {
-        Product savedProduct = new Product(1L, "un producto", "Apple Inc.");
-        savedProduct.save();
-
         Result result = route(app, controllers.routes.ProductsController.getProductById(1));
-        String s = contentAsString(result);
-        ObjectMapper objectMapper = new ObjectMapper();
-        Product retrievedProduct = objectMapper.readValue(s, new TypeReference<Product>() {
-        });
+        Product retrievedProduct = getProductFromResult(result);
 
         assertThat(result.status()).isEqualTo(OK);
         assertThat(savedProduct.id).isEqualTo(retrievedProduct.id);
         assertThat(savedProduct.name).isEqualTo(retrievedProduct.name);
-        savedProduct.delete();
+//        savedProduct.delete();
     }
 
     @Test
     public void test001b_obtainingPresentProductById() {
         running(fakeApplication(), () -> {
-            Product savedProduct = new Product(1L, "un producto", "Apple Inc.");
-            savedProduct.save();
-
             Result result = route(app, routes.ProductsController.getProductById(1));
-            String s = contentAsString(result);
-            ObjectMapper objectMapper = new ObjectMapper();
-            Product retrievedProduct = null;
-            try {
-                retrievedProduct = objectMapper.readValue(s, new TypeReference<Product>() {
-                });
-            } catch (IOException e) {
-                System.out.println("failed test, could not read product value");
-                fail();
-            }
+            Product retrievedProduct = getProductFromResult(result);
 
             assertThat(result.status()).isEqualTo(OK);
             assertThat(savedProduct.id).isEqualTo(retrievedProduct.id);
             assertThat(savedProduct.name).isEqualTo(retrievedProduct.name);
-            savedProduct.delete();
+//            savedProduct.delete();
         });
     }
 
@@ -104,16 +98,12 @@ public class ProductTest extends WithApplication {
         String postString = contentAsString(postResult);
 
         System.out.println(postString);
-        ObjectMapper objectMapper = new ObjectMapper();
         Product createdProduct = objectMapper.readValue(postString, new TypeReference<Product>() {
         });
 
         Long idOfCreated = createdProduct.id;
         Result getResult = route(app, controllers.routes.ProductsController.getProductById(idOfCreated));
-        String getString = contentAsString(getResult);
-        System.out.println(getString);
-        Product retrievedProduct = objectMapper.readValue(getString, new TypeReference<Product>() {
-        });
+        Product retrievedProduct =getProductFromResult(getResult);
 
         assertThat(getResult.status()).isEqualTo(OK);
         assertThat(retrievedProduct.name).isEqualTo(newProduct.name);
@@ -147,28 +137,24 @@ public class ProductTest extends WithApplication {
 
 
     @Test
-    public void test007_whenThereAreNoProductsGetAllShouldReturnEmpty() throws IOException {
+    public void test007_whenThereAreNoProductsGetAllShouldReturnEmpty() {
+        savedProduct.delete();
         Result result = route(app, controllers.routes.ProductsController.getAllProducts());
-        ObjectMapper objectMapper = new ObjectMapper();
 
-        String s = contentAsString(result);
-        List<Product> products = objectMapper.readValue(s, new TypeReference<List<Product>>() {
-        });
+        List<Product> products = getProductListFromResult(result);
 
         assertThat(result.status()).isEqualTo(OK);
         assertThat(products.isEmpty()).isEqualTo(true);
-
+        savedProduct.save();
     }
 
     @Test
     public void test008_whenProductsArePresentGetAllShoulReturnAllProducts() throws IOException {
         List<Product> expectedProducts = addProductsToCatalog();
-        ObjectMapper objectMapper = new ObjectMapper();
         Result result = route(app, controllers.routes.ProductsController.getAllProducts());
 
         String s = contentAsString(result);
-        List<Product> products = objectMapper.readValue(s, new TypeReference<List<Product>>() {
-        });
+        List<Product> products = getProductListFromResult(result);
 
         assertThat(result.status()).isEqualTo(OK);
         assertThat(products).isEqualTo(expectedProducts);
@@ -177,6 +163,7 @@ public class ProductTest extends WithApplication {
     }
 
     private List<Product> addProductsToCatalog() {
+        savedProduct.delete();
         Product product1 = new Product(1L, "un producto", "Apple Inc.");
         Product product2 = new Product(2L, "un producto", "Thinking Machines");
         Product product3 = new Product(3L, "un producto", "RCA");
@@ -192,8 +179,33 @@ public class ProductTest extends WithApplication {
         return Arrays.asList(product1, product2, product3, product4, product5);
     }
 
+    private Product getProductFromResult(Result result){
+        try {
+            return objectMapper.readValue(contentAsString(result), new TypeReference<Product>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<Product> getProductListFromResult(Result result){
+        try {
+            return objectMapper.readValue(contentAsString(result), new TypeReference<List<Product>>() {
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
     @After
     public void teardown() {
+        try {
+            Ebean.deleteAll(Product.find.all());
+        } catch (RuntimeException e){
+
+        }
         Ebean.createCallableSql("TRUNCATE TABLE Product");
     }
 
