@@ -35,7 +35,7 @@ public class ProductTest extends WithApplication {
     }
 
     @Test
-    public void test001_obtainingPresentProductById() throws IOException {
+    public void test001_obtainingPresentProductById() {
         Product savedProduct = new Product(1L, "un producto", "Apple Inc.");
         savedProduct.save();
         Result result = route(app, controllers.routes.ProductsController.getProductById(1));
@@ -143,7 +143,7 @@ public class ProductTest extends WithApplication {
     }
 
     @Test
-    public void test008_whenProductsArePresentGetAllShouldReturnAllProducts() throws IOException {
+    public void test008_whenProductsArePresentGetAllShouldReturnAllProducts() {
         List<Product> expectedProducts = addProductsToCatalog();
         Result result = route(app, controllers.routes.ProductsController.getAllProducts());
 
