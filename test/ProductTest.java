@@ -4,25 +4,39 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import controllers.routes;
 import io.ebean.Ebean;
+import io.ebean.Model;
 import models.Product;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
+import play.test.Helpers;
 import play.test.WithApplication;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static play.mvc.Http.Status.OK;
+import static play.test.Helpers.*;
 import static play.mvc.Http.Status.*;
 import static play.test.Helpers.contentAsString;
 import static play.test.Helpers.route;
 
 
 public class ProductTest extends WithApplication {
+//    @Before
+//    public void setup() {
+//        Product product1 = new Product(10L, "un producto", "Mark Inc.");
+//        product1.save();
+//
+//    }
 
     @Test
     public void test001_obtainingPresentProductById() throws IOException {
@@ -91,7 +105,46 @@ public class ProductTest extends WithApplication {
     }
 
     @Test
-    public void listComputersOnTheFirstPage() throws IOException {
+    public void test005_whenProductIsCreatedWithNullDescriptionStatusShouldBadRequest() {
+        Product newProduct = new Product(null, "new product", null);
+        JsonNode jsonNode = Json.toJson(newProduct);
+        Http.RequestBuilder saveRequest = new Http.RequestBuilder().method("POST")
+                .bodyJson(jsonNode)
+                .uri(routes.ProductsController.create().url());
+        Result postResult = route(app, saveRequest);
+
+        assertThat(postResult.status()).isEqualTo(BAD_REQUEST);
+    }
+
+    @Test
+    public void test006_whenProductIsCreatedWithNullNameStatusShouldBadRequest() {
+        Product newProduct = new Product(null, null, "description");
+        JsonNode jsonNode = Json.toJson(newProduct);
+        Http.RequestBuilder saveRequest = new Http.RequestBuilder().method("POST")
+                .bodyJson(jsonNode)
+                .uri(routes.ProductsController.create().url());
+        Result postResult = route(app, saveRequest);
+
+        assertThat(postResult.status()).isEqualTo(BAD_REQUEST);
+    }
+
+
+    @Test
+    public void test007_whenThereAreNoProductsGetAllShouldReturnEmpty() throws IOException {
+        Result result = route(app, controllers.routes.ProductsController.getAllProducts());
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String s = contentAsString(result);
+        List<Product> products = objectMapper.readValue(s, new TypeReference<List<Product>>() {
+        });
+
+        assertThat(result.status()).isEqualTo(OK);
+        assertThat(products.isEmpty()).isEqualTo(true);
+
+    }
+
+    @Test
+    public void test008_whenProductsArePresentGetAllShoulReturnAllProducts() throws IOException {
         List<Product> expectedProducts = addProductsToCatalog();
         ObjectMapper objectMapper = new ObjectMapper();
         Result result = route(app, controllers.routes.ProductsController.getAllProducts());
@@ -102,6 +155,8 @@ public class ProductTest extends WithApplication {
 
         assertThat(result.status()).isEqualTo(OK);
         assertThat(products).isEqualTo(expectedProducts);
+
+        expectedProducts.forEach(Model::delete);
     }
 
     private List<Product> addProductsToCatalog() {
