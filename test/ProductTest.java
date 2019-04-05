@@ -6,7 +6,6 @@ import io.ebean.Ebean;
 import io.ebean.Model;
 import models.Product;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Http;
@@ -14,11 +13,9 @@ import play.mvc.Result;
 import play.test.WithApplication;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.TestCase.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 import static play.mvc.Http.Status.OK;
 import static play.test.Helpers.BAD_REQUEST;
@@ -31,7 +28,7 @@ import static play.test.Helpers.running;
 
 
 public class ProductTest extends WithApplication {
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
     public ProductTest() {
         objectMapper = new ObjectMapper();
@@ -102,7 +99,7 @@ public class ProductTest extends WithApplication {
 
         Long idOfCreated = createdProduct.id;
         Result getResult = route(app, controllers.routes.ProductsController.getProductById(idOfCreated));
-        Product retrievedProduct =getProductFromResult(getResult);
+        Product retrievedProduct = getProductFromResult(getResult);
 
         assertThat(getResult.status()).isEqualTo(OK);
         assertThat(retrievedProduct.name).isEqualTo(newProduct.name);
@@ -146,11 +143,10 @@ public class ProductTest extends WithApplication {
     }
 
     @Test
-    public void test008_whenProductsArePresentGetAllShoulReturnAllProducts() throws IOException {
+    public void test008_whenProductsArePresentGetAllShouldReturnAllProducts() throws IOException {
         List<Product> expectedProducts = addProductsToCatalog();
         Result result = route(app, controllers.routes.ProductsController.getAllProducts());
 
-        String s = contentAsString(result);
         List<Product> products = getProductListFromResult(result);
 
         assertThat(result.status()).isEqualTo(OK);
@@ -175,33 +171,26 @@ public class ProductTest extends WithApplication {
         return Arrays.asList(product1, product2, product3, product4, product5);
     }
 
-    private Product getProductFromResult(Result result){
+    private Product getProductFromResult(Result result) {
         try {
             return objectMapper.readValue(contentAsString(result), new TypeReference<Product>() {
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("product cannot be mapped from result");
         }
-        return null;
     }
 
-    private List<Product> getProductListFromResult(Result result){
+    private List<Product> getProductListFromResult(Result result) {
         try {
             return objectMapper.readValue(contentAsString(result), new TypeReference<List<Product>>() {
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("product list cannot be mapped from result");
         }
-        return new ArrayList<>();
     }
 
     @After
     public void teardown() {
-        try {
-            Ebean.deleteAll(Product.find.all());
-        } catch (RuntimeException e){
-
-        }
         Ebean.createCallableSql("TRUNCATE TABLE Product");
     }
 

@@ -1,12 +1,9 @@
 package models;
 
 
-import io.ebean.Finder;
-import io.ebean.Model;
 import play.data.validation.Constraints;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 
 
 /**
@@ -29,15 +26,10 @@ public class Product extends BaseModel {
         this.description = description;
     }
 
-    public Product() {
-    }
-
     public boolean validForInsertion() {
         return name != null && description != null;
     }
 
-    //Static
-    public static final Finder<Long, Product> find = new Finder<>(Product.class);
 }
 
 

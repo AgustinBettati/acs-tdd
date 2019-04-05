@@ -1,6 +1,7 @@
 package repository;
 
-import io.ebean.*;
+import io.ebean.Ebean;
+import io.ebean.EbeanServer;
 import models.Product;
 import play.db.ebean.EbeanConfig;
 
