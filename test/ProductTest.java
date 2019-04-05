@@ -31,30 +31,29 @@ import static play.test.Helpers.running;
 
 
 public class ProductTest extends WithApplication {
-    private Product savedProduct;
     ObjectMapper objectMapper;
 
-    @Before
-    public void setup(){
+    public ProductTest() {
         objectMapper = new ObjectMapper();
-
-        savedProduct = new Product(1L, "un producto", "Apple Inc.");
-        savedProduct.save();
     }
 
     @Test
     public void test001_obtainingPresentProductById() throws IOException {
+        Product savedProduct = new Product(1L, "un producto", "Apple Inc.");
+        savedProduct.save();
         Result result = route(app, controllers.routes.ProductsController.getProductById(1));
         Product retrievedProduct = getProductFromResult(result);
 
         assertThat(result.status()).isEqualTo(OK);
         assertThat(savedProduct.id).isEqualTo(retrievedProduct.id);
         assertThat(savedProduct.name).isEqualTo(retrievedProduct.name);
-//        savedProduct.delete();
+        savedProduct.delete();
     }
 
     @Test
     public void test001b_obtainingPresentProductById() {
+        Product savedProduct = new Product(1L, "un producto", "Apple Inc.");
+        savedProduct.save();
         running(fakeApplication(), () -> {
             Result result = route(app, routes.ProductsController.getProductById(1));
             Product retrievedProduct = getProductFromResult(result);
@@ -62,7 +61,7 @@ public class ProductTest extends WithApplication {
             assertThat(result.status()).isEqualTo(OK);
             assertThat(savedProduct.id).isEqualTo(retrievedProduct.id);
             assertThat(savedProduct.name).isEqualTo(retrievedProduct.name);
-//            savedProduct.delete();
+            savedProduct.delete();
         });
     }
 
@@ -86,7 +85,7 @@ public class ProductTest extends WithApplication {
 
     @Test
     public void test004_postingProductAndRetrievingById() throws IOException {
-        Product newProduct = new Product(null, "new product", "Apple Inc.");
+        Product newProduct = new Product(null, "other product", "Microsft.");
         JsonNode jsonNode = Json.toJson(newProduct);
         Http.RequestBuilder saveRequest = new Http.RequestBuilder().method("POST")
                 .bodyJson(jsonNode)
@@ -138,14 +137,12 @@ public class ProductTest extends WithApplication {
 
     @Test
     public void test007_whenThereAreNoProductsGetAllShouldReturnEmpty() {
-        savedProduct.delete();
         Result result = route(app, controllers.routes.ProductsController.getAllProducts());
 
         List<Product> products = getProductListFromResult(result);
 
         assertThat(result.status()).isEqualTo(OK);
         assertThat(products.isEmpty()).isEqualTo(true);
-        savedProduct.save();
     }
 
     @Test
@@ -163,7 +160,6 @@ public class ProductTest extends WithApplication {
     }
 
     private List<Product> addProductsToCatalog() {
-        savedProduct.delete();
         Product product1 = new Product(1L, "un producto", "Apple Inc.");
         Product product2 = new Product(2L, "un producto", "Thinking Machines");
         Product product3 = new Product(3L, "un producto", "RCA");
