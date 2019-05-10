@@ -1,0 +1,15 @@
+version: '3.3'
+
+# para correr solo la base de datos:
+# docker-compose run --service-ports database
+
+services:
+  database:
+    image: kartoza/postgis:9.6-2.4
+    ports:
+      - "5432:5432"
+    environment:
+      - ALLOW_IP_RANGE=0.0.0.0/0
+      - POSTGRES_DBNAME=spatialspring
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASS=admin
