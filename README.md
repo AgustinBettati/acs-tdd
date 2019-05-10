@@ -1,11 +1,7 @@
 
-### using local database
-
-**REQUIRED: PostgreSQL is running**
-database: `spatialspring` & externalCourse: `postgres` & password: `admin`
-
+### Start postgres
 ```
-./gradlew clean bootRun
+docker-compose run --service-ports database
 ```
 
 ### running tests
