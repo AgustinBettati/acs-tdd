@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Redirect, withRouter } from "react-router";
+import {Redirect, withRouter} from "react-router";
 import {IProps, IState} from "./types";
 import {createCourse, updateCourse} from "../../api";
 import {
@@ -14,10 +14,11 @@ import {
     InputLabel,
     CardActions,
 } from '@material-ui/core';
+
 const styles = require('./courseForm.css');
 
 
-class courseForm extends React.Component<IProps, IState>{
+class courseForm extends React.Component<IProps, IState> {
 
     state: IState = {
         fields: {
@@ -66,13 +67,13 @@ class courseForm extends React.Component<IProps, IState>{
     };
 
     mapCourse = () => {
-        const { course } = this.state;
+        const {course} = this.state;
 
         if (!course) {
             return;
         }
 
-        const { name, description, id, platform, link } = course;
+        const {name, description, id, platform, link} = course;
         this.setState({
             ...this.state,
             fields: {
@@ -98,10 +99,9 @@ class courseForm extends React.Component<IProps, IState>{
 
     handleSubmit = () => {
         if (!this.state.isNew) {
-            updateCourse(this.state.fields).then(() => this.setState({ redirect: '/' }));
-        }
-        else {
-            createCourse(this.state.fields).then(() => this.setState({ redirect: '/' }));
+            updateCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
+        } else {
+            createCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
         }
     };
 
@@ -114,7 +114,7 @@ class courseForm extends React.Component<IProps, IState>{
     };
 
     renderTitle = () => {
-        const { isNew } = this.state;
+        const {isNew} = this.state;
         return <div>
             {
                 !isNew &&
@@ -131,7 +131,7 @@ class courseForm extends React.Component<IProps, IState>{
     };
 
     render() {
-        const { fields, errors, isCreating, redirect } = this.state;
+        const {fields, errors, isCreating, redirect} = this.state;
 
         if (redirect) {
             return <Redirect to={redirect}/>;
@@ -142,64 +142,65 @@ class courseForm extends React.Component<IProps, IState>{
         }
 
         return (
-            <div className={styles.NewCourse}>
-                <Typography className={styles['New-course-title']} color='textSecondary'>
-                    {
-                        this.getHeader()
-                    }
-                </Typography>
-                <Card className={styles['New-course-box']}>
-                    <CardHeader title={this.renderTitle()} className={styles.displayName}/>
-                    <CardContent>
-                        <form className={styles['New-course-form']}>
-                            <FormControl className={styles['course-form-control']} error={errors.name}>
-                                <InputLabel required htmlFor='admin-name'>Name</InputLabel>
-                                <Input id='course-name'
-                                       value={fields.name}
-                                       onChange={this.handleChange('name')}
-                                />
-                            </FormControl>
-                            <FormControl className={styles['course-form-control']} error={errors.description}>
-                                <InputLabel required htmlFor='course-description'>Description</InputLabel>
-                                <Input id='course-description'
-                                       value={fields.description}
-                                       onChange={this.handleChange('description')}
-                                />
-                            </FormControl>
-                            <FormControl className={styles['course-form-control']} error={errors.platform}>
-                                <InputLabel required htmlFor='course-platform'>Platform</InputLabel>
-                                <Input id='course-platform'
-                                       value={fields.platform}
-                                       onChange={this.handleChange('platform')}
-                                />
-                            </FormControl>
-                            <FormControl className={styles['course-form-control']} error={errors.link}>
-                                <InputLabel required htmlFor='course-link'>Link</InputLabel>
-                                <Input id='course-link'
-                                       value={fields.link}
-                                       onChange={this.handleChange('link')}
-                                />
-                            </FormControl>
-                        </form>
-                    </CardContent>
+                <div className={styles.NewCourse}>
+                    <Typography className={styles['New-course-title']} color='textSecondary'>
+                        {
+                            this.getHeader()
+                        }
+                    </Typography>
+                    <Card className={styles['New-course-box']}>
+                        <CardHeader title={this.renderTitle()} className={styles.displayName}/>
+                        <CardContent>
+                            <form className={styles['New-course-form']}>
+                                <FormControl className={styles['course-form-control']} error={errors.name}>
+                                    <InputLabel required htmlFor='admin-name'>Name</InputLabel>
+                                    <Input id='course-name'
+                                           value={fields.name}
+                                           onChange={this.handleChange('name')}
+                                    />
+                                </FormControl>
+                                <FormControl className={styles['course-form-control']} error={errors.description}>
+                                    <InputLabel required htmlFor='course-description'>Description</InputLabel>
+                                    <Input id='course-description'
+                                           value={fields.description}
+                                           onChange={this.handleChange('description')}
+                                    />
+                                </FormControl>
+                                <FormControl className={styles['course-form-control']} error={errors.platform}>
+                                    <InputLabel required htmlFor='course-platform'>Platform</InputLabel>
+                                    <Input id='course-platform'
+                                           value={fields.platform}
+                                           onChange={this.handleChange('platform')}
+                                    />
+                                </FormControl>
+                                <FormControl className={styles['course-form-control']} error={errors.link}>
+                                    <InputLabel required htmlFor='course-link'>Link</InputLabel>
+                                    <Input id='course-link'
+                                           value={fields.link}
+                                           onChange={this.handleChange('link')}
+                                    />
+                                </FormControl>
+                            </form>
+                        </CardContent>
 
-                    <CardActions>
-                        <div className={styles.buttonContainer}>
-                            {
-                                <Button
-                                    variant='contained'
-                                    color='primary'
-                                    className={styles['create-admin-button']}
-                                    onClick={this.handleSubmit}
-                                >
-                                    SAVE
-                                </Button>
-                            }
-                        </div>
-                    </CardActions>
+                        <CardActions>
+                            <div className={styles.buttonContainer}>
+                                {
+                                    <Button
+                                        variant='contained'
+                                        color='primary'
+                                        className={styles['create-admin-button']}
+                                        onClick={this.handleSubmit}
+                                    >
+                                        SAVE
+                                    </Button>
+                                }
+                            </div>
+                        </CardActions>
 
-                </Card>
-            </div>
+                    </Card>
+                </div>
+
         );
     }
 }
