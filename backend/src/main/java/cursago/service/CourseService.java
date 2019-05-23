@@ -25,7 +25,7 @@ public class CourseService {
         String generatedId = UUID.randomUUID().toString();
         externalCourse.setId(generatedId);
         courseRepository.save(externalCourse);
-        return generatedId;
+        return externalCourse.getId();
     }
 
     public ExternalCourse updateCourse(ExternalCourseEdit ExternalCourseEdit, ExternalCourse externalCourse) {
