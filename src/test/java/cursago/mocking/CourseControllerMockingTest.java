@@ -1,13 +1,11 @@
 package cursago.mocking;
 
 import cursago.controller.CourseController;
+import cursago.mocks.FailureRepository;
+import cursago.mocks.SuccessRepository;
 import cursago.model.ExternalCourse;
 import cursago.service.CourseService;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -21,19 +19,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 
-@RunWith(MockitoJUnitRunner.class)
-public class ExternalCourseControllerTest {
+public class CourseControllerMockingTest {
 
-    @Mock
-    private CourseService courseService;
+    private CourseService successCourseService = new CourseService(new SuccessRepository());
+    private CourseController successCourseController = new CourseController(successCourseService);
 
-    @InjectMocks
-    private CourseController courseController = new CourseController(courseService);
+    private CourseService failureCourseService = new CourseService(new FailureRepository());
+    private CourseController failureCourseController = new CourseController(failureCourseService);
 
     @Test
     public void test001_postOfNewCourseShouldReturnCreatedWithIdInHeader() {
-
-        String fakeId = "0b9e5535-1ca6-4a96-8d5b-0b54ec92c78f";
 
         ExternalCourse externalCourse = new ExternalCourse();
         externalCourse.setName("JUnit course");
@@ -41,12 +36,9 @@ public class ExternalCourseControllerTest {
         externalCourse.setLink("https://udemy.com?id=23423424");
         externalCourse.setPlatform("Udemy");
 
-        when(courseService.saveCourse(externalCourse)).thenReturn(fakeId);
+        ResponseEntity<?> result = successCourseController.postCourse(externalCourse);
 
-        ResponseEntity<?> result = courseController.postCourse(externalCourse);
-
-        verify(courseService, atLeastOnce()).saveCourse(externalCourse);
-        assertEquals("/course/" + fakeId, result.getHeaders().getLocation().toString());
+        assertEquals("/course/0b9e5535-1ca6-4a96-8d5b-0b54ec92c78f", result.getHeaders().getLocation().toString());
         assertThat(result.getStatusCode(), is(HttpStatus.CREATED));
     }
 
@@ -58,10 +50,7 @@ public class ExternalCourseControllerTest {
         externalCourse.setLink("https://udemy.com?id=23423424");
         externalCourse.setPlatform("Udemy");
 
-        when(courseService.existsCourseWithName(externalCourse.getName())).thenReturn(true);
-
-        ResponseEntity<?> result = courseController.postCourse(externalCourse);
-        verify(courseService, atLeastOnce()).existsCourseWithName(externalCourse.getName());
+        ResponseEntity<?> result = failureCourseController.postCourse(externalCourse);
         assertThat(result.getStatusCode(), is(HttpStatus.CONFLICT));
     }
 
@@ -75,10 +64,7 @@ public class ExternalCourseControllerTest {
         externalCourse.setLink("https://udemy.com?id=23423424");
         externalCourse.setPlatform("Udemy");
 
-        when(courseService.getCourseById(fakeId)).thenReturn(Optional.of(externalCourse));
-
-        ResponseEntity<?> result = courseController.getCourseById(fakeId);
-        verify(courseService, atLeastOnce()).getCourseById(fakeId);
+        ResponseEntity<?> result = successCourseController.getCourseById(fakeId);
         assertThat(result.getStatusCode(), is(HttpStatus.OK));
     }
 
@@ -92,9 +78,7 @@ public class ExternalCourseControllerTest {
         externalCourse.setLink("https://udemy.com?id=23423424");
         externalCourse.setPlatform("Udemy");
 
-        when(courseService.getCourseById(fakeId)).thenReturn(Optional.empty());
-        ResponseEntity<?> result = courseController.getCourseById(fakeId);
-        verify(courseService, atLeastOnce()).getCourseById(fakeId);
+        ResponseEntity<?> result = failureCourseController.getCourseById(fakeId);
         assertThat(result.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 }
