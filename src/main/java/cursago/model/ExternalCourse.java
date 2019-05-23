@@ -1,10 +1,10 @@
 package cursago.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -32,6 +32,10 @@ public class ExternalCourse {
     @NotNull
     @Pattern(regexp = "https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,}", flags = Pattern.Flag.CASE_INSENSITIVE, message = "Invalid link")
     private String link;
+
+    @Column(name = "sharedInTwitter")
+    @NotNull
+    private boolean sharedInTwitter;
 
     public String getId() {
         return id;
@@ -71,5 +75,13 @@ public class ExternalCourse {
 
     public void setLink(String link) {
         this.link = link;
+    }
+
+    public boolean isSharedInTwitter() {
+        return sharedInTwitter;
+    }
+
+    public void setSharedInTwitter(boolean sharedInTwitter) {
+        this.sharedInTwitter = sharedInTwitter;
     }
 }
