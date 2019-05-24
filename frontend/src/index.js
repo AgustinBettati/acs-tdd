@@ -6,12 +6,15 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router } from 'react-router-dom';
 import Home from "./components/home/home";
 import {Route} from "react-router";
+import UpdateForm from "./components/UpdateForm/updateForm";
+
 
 const App = () => {
     return (
         <Router>
             <Route path="/course" component={CourseForm} />
             <Route path="/home" component={Home} />
+            <Route path="/update" component={UpdateForm} />
         </Router>)
 };
 ReactDOM.render(<App/>, document.getElementById('root'));
