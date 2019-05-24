@@ -101,7 +101,7 @@ class courseForm extends React.Component<IProps, IState> {
         if (!this.state.isNew) {
             updateCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
         } else {
-            createCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
+            createCourse(this.state.fields).then(() => this.setState({redirect: '/home'}));
         }
     };
 
