@@ -1,6 +1,6 @@
 describe('Register test', function() {
     it('should visit register page and register a course', function() {
-        cy.visit('http://localhost:3000');
+        cy.visit('http://localhost:3000/course');
 
         cy.contains("Create course");
 

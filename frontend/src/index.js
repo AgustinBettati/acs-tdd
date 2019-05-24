@@ -4,11 +4,14 @@ import './index.css';
 import CourseForm from './components/CourseForm/courseForm.tsx'
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router } from 'react-router-dom';
+import Home from "./components/home/home";
+import {Route} from "react-router";
 
 const App = () => {
     return (
         <Router>
-            <CourseForm/>
+            <Route path="/course" component={CourseForm} />
+            <Route path="/home" component={Home} />
         </Router>)
 };
 ReactDOM.render(<App/>, document.getElementById('root'));
