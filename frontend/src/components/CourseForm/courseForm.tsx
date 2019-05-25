@@ -5,18 +5,15 @@ import {createCourse, updateCourse} from "../../api";
 import {
     Button,
     CircularProgress,
-    Typography,
-    Card,
-    CardHeader,
-    CardContent,
-    FormControl,
-    Input,
-    InputLabel,
-    CardActions,
 } from '@material-ui/core';
-
-const styles = require('./courseForm.css');
-
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Container from "@material-ui/core/Container";
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardActions from "@material-ui/core/CardActions";
 
 class courseForm extends React.Component<IProps, IState> {
 
@@ -118,12 +115,12 @@ class courseForm extends React.Component<IProps, IState> {
         return <div>
             {
                 !isNew &&
-                <div className={styles.deleteButtonDiv}>
+                <div className={'delete-button'}>
                     <Button
                         variant='contained'
                         color='secondary'
                     >
-                        DELETE
+                        Delete
                     </Button>
                 </div>
             }
@@ -142,65 +139,80 @@ class courseForm extends React.Component<IProps, IState> {
         }
 
         return (
-                <div className={styles.NewCourse}>
-                    <Typography className={styles['New-course-title']} color='textSecondary'>
-                        {
-                            this.getHeader()
-                        }
-                    </Typography>
-                    <Card className={styles['New-course-box']}>
-                        <CardHeader title={this.renderTitle()} className={styles.displayName}/>
-                        <CardContent>
-                            <form className={styles['New-course-form']}>
-                                <FormControl className={styles['course-form-control']} error={errors.name}>
-                                    <InputLabel required htmlFor='admin-name'>Name</InputLabel>
-                                    <Input id='course-name'
-                                           value={fields.name}
-                                           onChange={this.handleChange('name')}
-                                    />
-                                </FormControl>
-                                <FormControl className={styles['course-form-control']} error={errors.description}>
-                                    <InputLabel required htmlFor='course-description'>Description</InputLabel>
-                                    <Input id='course-description'
-                                           value={fields.description}
-                                           onChange={this.handleChange('description')}
-                                    />
-                                </FormControl>
-                                <FormControl className={styles['course-form-control']} error={errors.platform}>
-                                    <InputLabel required htmlFor='course-platform'>Platform</InputLabel>
-                                    <Input id='course-platform'
-                                           value={fields.platform}
-                                           onChange={this.handleChange('platform')}
-                                    />
-                                </FormControl>
-                                <FormControl className={styles['course-form-control']} error={errors.link}>
-                                    <InputLabel required htmlFor='course-link'>Link</InputLabel>
-                                    <Input id='course-link'
-                                           value={fields.link}
-                                           onChange={this.handleChange('link')}
-                                    />
-                                </FormControl>
-                            </form>
-                        </CardContent>
-
-                        <CardActions>
-                            <div className={styles.buttonContainer}>
-                                {
-                                    <Button
-                                        variant='contained'
-                                        color='primary'
-                                        className={styles['create-admin-button']}
-                                        onClick={this.handleSubmit}
-                                    >
-                                        SAVE
-                                    </Button>
-                                }
-                            </div>
-                        </CardActions>
-
-                    </Card>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline/>
+                <div className={'paper center-content'}>
+                    <Grid container direction={'row'}>
+                        <Grid item direction={'column'}>
+                        </Grid>
+                        <Grid item direction={'column'}>
+                            <Card className={'new-course'}>
+                                <Grid container>
+                                    <Grid item direction={'row'}>
+                                        <CardHeader className={'center-content'} title={this.getHeader()} />
+                                    </Grid>
+                                    <Grid item direction={'row'}>
+                                        <CardContent>
+                                            <form className={'form'}>
+                                                <TextField
+                                                    variant="outlined"
+                                                    margin="normal"
+                                                    required
+                                                    fullWidth
+                                                    label="Course name"
+                                                    name="email"
+                                                    id='course-name'
+                                                    value={fields.name}
+                                                    error={errors.name}
+                                                    onChange={this.handleChange('name')}
+                                                />
+                                                <TextField
+                                                    variant="outlined"
+                                                    margin="normal"
+                                                    required
+                                                    fullWidth
+                                                    label="Course platform"
+                                                    name="email"
+                                                    id='course-platform'
+                                                    value={fields.platform}
+                                                    error={errors.platform}
+                                                    onChange={this.handleChange('platform')}
+                                                />
+                                                <TextField
+                                                    variant="outlined"
+                                                    margin="normal"
+                                                    required
+                                                    fullWidth
+                                                    label="Course link"
+                                                    name="email"
+                                                    id='course-link'
+                                                    value={fields.link}
+                                                    error={errors.link}
+                                                    onChange={this.handleChange('link')}
+                                                />
+                                            </form>
+                                        </CardContent>
+                                    </Grid>
+                                    <Grid item direction={'row'}>
+                                        <CardActions>
+                                            <Button
+                                                variant='contained'
+                                                color='primary'
+                                                className={'save-button'}
+                                                onClick={this.handleSubmit}
+                                            >
+                                                Save
+                                            </Button>
+                                        </CardActions>
+                                    </Grid>
+                                </Grid>
+                            </Card>
+                        </Grid>
+                        <Grid item direction={'column'}>
+                        </Grid>
+                    </Grid>
                 </div>
-
+            </Container>
         );
     }
 }

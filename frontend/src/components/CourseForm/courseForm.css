@@ -1,14 +1,25 @@
-
-.NewCourse {
-    text-align: center;
+.paper {
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.New-course-title {
+.form {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.new-course {
+    margin-top: 40px;
+}
+
+.new-course-title {
     text-align: center;
     font-size: 20px !important;
 }
 
-.New-course-form {
+.new-course-form {
     display: grid;
 }
 
@@ -25,7 +36,7 @@
     display: inline-flex !important;
 }
 
-.New-course-box {
+.new-course-box {
     width: 50%;
     margin: 0 auto;
 }
@@ -34,35 +45,32 @@
     font-size: 9px !important;
 }
 
-.displayName {
+.display-name {
     min-height: 64px !important;
 }
 
-.displayNameDiv {
-    width: 100%;
+div {
     display: flex;
+    width: 100%;
     justify-content: center;
 }
 
-.deleteButtonDiv {
-    width: 100%;
+.center-content {
     display: flex;
-    justify-content: flex-end;
-}
-
-.buttonContainer {
     width: 100%;
-    display: flex;
-    justify-content: flex-end;
-}
-
-div {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 .loading {
     size: 10px;
 }
 
+.save-button {
+    margin-bottom: 10px !important;
+}
+
+.delete-button {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+}
