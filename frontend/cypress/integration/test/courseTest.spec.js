@@ -7,7 +7,7 @@ describe('Register test', function() {
         cy.get('[id="course-name"]').type('Matematica');
         cy.get('[id="course-description"]').type('This is a description');
         cy.get('[id="course-platform"]').type('Platform');
-        cy.get('[id="course-link"]').type('link.com');
+        cy.get('[id="course-link"]').type('www.link.com');
 
         cy.contains("SAVE").click()
     });

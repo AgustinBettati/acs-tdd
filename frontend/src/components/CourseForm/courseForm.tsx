@@ -14,6 +14,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardActions from "@material-ui/core/CardActions";
+import {IErrors} from "../UpdateForm/types";
 
 class courseForm extends React.Component<IProps, IState> {
 
@@ -95,11 +96,49 @@ class courseForm extends React.Component<IProps, IState> {
     };
 
     handleSubmit = () => {
-        if (!this.state.isNew) {
-            updateCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
-        } else {
-            createCourse(this.state.fields).then(() => this.setState({redirect: '/home'}));
+        if(this.validateAll()){
+            if (!this.state.isNew) {
+                updateCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
+            } else {
+                createCourse(this.state.fields).then(() => this.setState({redirect: '/home'}));
+            }
         }
+    };
+
+    validateAll = () => {
+        const errors: IErrors = {};
+
+        /* Validate all fields and set errors */
+        const results: boolean[] = Object.keys(this.state.fields).map((field) => {
+            const isValid = this.validate(field, this.state.fields[field]);
+            errors[field] = !isValid;
+            return isValid;
+        });
+        const reduce = results.reduce(this.checkBooleans, true);
+        /* Update error state */
+        this.setState({
+            ...this.state,
+            errors: errors,
+        });
+        return reduce;
+    };
+
+    checkBooleans = (acc: boolean, elem: boolean) => {
+        return acc && elem
+    };
+
+    validate = (field: string, value: any): boolean => {
+        if (field === 'link') {
+            return (
+                this.validateLink(value)
+            );
+        } else {
+            return true;
+        }
+    };
+
+    validateLink = (value: any): boolean => {
+        return value !== '' && value.includes('www.');
     };
 
     getHeader = () => {
@@ -159,8 +198,8 @@ class courseForm extends React.Component<IProps, IState> {
                                                     margin="normal"
                                                     required
                                                     fullWidth
-                                                    label="Course name"
-                                                    name="email"
+                                                    label="Name"
+                                                    name="name"
                                                     id='course-name'
                                                     value={fields.name}
                                                     error={errors.name}
@@ -171,8 +210,8 @@ class courseForm extends React.Component<IProps, IState> {
                                                     margin="normal"
                                                     required
                                                     fullWidth
-                                                    label="Course platform"
-                                                    name="email"
+                                                    label="Platform"
+                                                    name="platform"
                                                     id='course-platform'
                                                     value={fields.platform}
                                                     error={errors.platform}
@@ -183,8 +222,8 @@ class courseForm extends React.Component<IProps, IState> {
                                                     margin="normal"
                                                     required
                                                     fullWidth
-                                                    label="Course link"
-                                                    name="email"
+                                                    label="Link"
+                                                    name="link"
                                                     id='course-link'
                                                     value={fields.link}
                                                     error={errors.link}

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Redirect, withRouter} from "react-router";
-import {IProps, IState} from "./types";
+import {IErrors, IProps, IState} from "./types";
 import {createCourse, updateCourse} from "../../api";
 import {
     Button,
@@ -114,12 +114,51 @@ class updateForm extends React.Component<IProps, IState> {
     };
 
     handleSubmit = () => {
-        if (!this.state.isNew) {
-            updateCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
-        } else {
-            createCourse(this.state.fields).then(() => this.setState({redirect: '/home'}));
+        if(this.validateAll()){
+            if (!this.state.isNew) {
+                updateCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
+            } else {
+                createCourse(this.state.fields).then(() => this.setState({redirect: '/home'}));
+            }
         }
     };
+
+    validateAll = () => {
+        const errors: IErrors = {};
+
+        /* Validate all fields and set errors */
+        const results: boolean[] = Object.keys(this.state.fields).map((field) => {
+            const isValid = this.validate(field, this.state.fields[field]);
+            errors[field] = !isValid;
+            return isValid;
+        });
+        const reduce = results.reduce(this.checkBooleans, true);
+        /* Update error state */
+        this.setState({
+            ...this.state,
+            errors: errors,
+        });
+        return reduce;
+    };
+
+    checkBooleans = (acc: boolean, elem: boolean) => {
+        return acc && elem
+    };
+
+    validate = (field: string, value: any): boolean => {
+        if (field === 'link') {
+            return (
+                this.validateLink(value)
+            );
+        } else {
+            return true;
+        }
+    };
+
+    validateLink = (value: any): boolean => {
+        return value !== '' && value.includes('www.');
+    };
+
 
     getHeader = () => {
         if (this.state.isNew) {
