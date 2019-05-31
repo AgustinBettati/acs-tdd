@@ -90,6 +90,7 @@ class updateForm extends React.Component<IProps, IState> {
     handleChange = (prop: string) => (event: any) => {
 
         if (prop === 'id') {
+
             this.setState({
                 ...this.state,
                 fields: {
