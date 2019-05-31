@@ -1,5 +1,5 @@
 describe('Register test', function() {
-    it('should visit register page and register a course', function() {
+    it('register a course and go to home page', function() {
         cy.visit('http://localhost:3000/course');
 
         cy.contains("Create course");
@@ -8,8 +8,22 @@ describe('Register test', function() {
         cy.get('[id="course-description"]').type('This is a description');
         cy.get('[id="course-platform"]').type('Platform');
         cy.get('[id="course-link"]').type('www.link.com');
+        cy.get('[id="submit-button"]').click();
 
-        cy.contains("SAVE").click()
+        cy.contains("Home")
+    });
+
+    it('register a course with invalid link and show error', function() {
+        cy.visit('http://localhost:3000/course');
+
+        cy.contains("Create course");
+        cy.get('[id="course-name"]').type('Matematica');
+        cy.get('[id="course-description"]').type('This is a description');
+        cy.get('[id="course-platform"]').type('Platform');
+        cy.get('[id="course-link"]').type('no es un link');
+        cy.get('[id="submit-button"]').click();
+
+        cy.contains("Create course")
     });
 
     it('should visit update page and bring all the respective info', function() {

@@ -217,7 +217,7 @@ class courseForm extends React.Component<IProps, IState> {
                                                     fullWidth
                                                     label="Description"
                                                     name="description"
-                                                    id='description'
+                                                    id='course-description'
                                                     value={fields.description}
                                                     error={errors.description}
                                                     onChange={this.handleChange('description')}
@@ -254,6 +254,7 @@ class courseForm extends React.Component<IProps, IState> {
                                             <Button
                                                 variant='contained'
                                                 color='primary'
+                                                id='submit-button'
                                                 className={'save-button'}
                                                 onClick={this.handleSubmit}
                                             >
