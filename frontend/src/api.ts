@@ -35,7 +35,6 @@ export const getCourse = (id: string): Promise<Response> => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(id),
     };
     return fetch(url, init);
 };

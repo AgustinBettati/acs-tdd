@@ -42,12 +42,12 @@ class updateForm extends React.Component<IProps, IState> {
     };
 
     componentDidMount() {
-        const { match } = this.props;
+        const {match} = this.props;
         if (match.params.id) {
             // getCourse(match.params.id).then(this.handleResponse).then(this.receiveCourse);
-            this.setState({ isNew: false});
+            this.setState({isNew: false});
         } else {
-            this.setState({ isNew: true });
+            this.setState({isNew: true});
         }
     }
 
@@ -96,24 +96,31 @@ class updateForm extends React.Component<IProps, IState> {
     handleChange = (prop: string) => (event: any) => {
 
         if (prop === 'id') {
+            console.log(event.target.value);
+            console.log(prop);
 
             // @ts-ignore
-            getCourse(prop).then((course2 : ICourse) => {
-                this.setState({
-                    ...this.state,
-                    fields: {
-                        ...this.state.fields,
-                        name: course2.name,
-                        description:course2.description,
-                        platform: course2.platform,
-                        link:course2.link
-                    }
-                })
+            getCourse(event.target.value).then((course) => {
+                const promise = course.json();
+                promise.then((course2: ICourse) => {
+
+                    this.setState({
+                        ...this.state,
+                        fields: {
+                            ...this.state.fields,
+                            name: course2.name,
+                            description: course2.description,
+                            platform: course2.platform,
+                            link: course2.link
+                        }
+                    })
+                    // console.log(course2);
+                });
+
             });
 
 
-        }
-        else {
+        } else {
             this.setState({
                 ...this.state,
                 fields: {
@@ -126,7 +133,7 @@ class updateForm extends React.Component<IProps, IState> {
     };
 
     handleSubmit = () => {
-        if(this.validateAll()){
+        if (this.validateAll()) {
             if (!this.state.isNew) {
                 updateCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
             } else {
