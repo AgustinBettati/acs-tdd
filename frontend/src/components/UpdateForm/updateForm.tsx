@@ -44,7 +44,7 @@ class updateForm extends React.Component<IProps, IState> {
     componentDidMount() {
         const { match } = this.props;
         if (match.params.id) {
-            getCourse(match.params.id).then(this.handleResponse).then(this.receiveCourse);
+            // getCourse(match.params.id).then(this.handleResponse).then(this.receiveCourse);
             this.setState({ isNew: false});
         } else {
             this.setState({ isNew: true });
@@ -95,24 +95,34 @@ class updateForm extends React.Component<IProps, IState> {
 
     handleChange = (prop: string) => (event: any) => {
 
-        // if (prop === 'id') {
-        //     getCourse(prop).then(this.handleResponse).then(this.receiveCourse);
-        //     // this.state.course = getCourse(prop);
-        // }
-        // else {
-        //     this.setState({
-        //         ...this.state,
-        //         fields: {
-        //             ...this.state.fields,
-        //             [prop]: event.target.value,
-        //         },
-        //     });
-        // }
+        if (prop === 'id') {
 
-    };
+            // @ts-ignore
+            getCourse(prop).then((course2 : ICourse) => {
+                this.setState({
+                    ...this.state,
+                    fields: {
+                        ...this.state.fields,
+                        name: course2.name,
+                        description:course2.description,
+                        platform: course2.platform,
+                        link:course2.link
+                    }
+                })
+            });
 
-    receiveCourse = (course: ICourse) => {
-        this.setState({course})
+
+        }
+        else {
+            this.setState({
+                ...this.state,
+                fields: {
+                    ...this.state.fields,
+                    [prop]: event.target.value,
+                },
+            });
+        }
+
     };
 
     handleSubmit = () => {
