@@ -17,6 +17,10 @@ export interface IState {
     isDeleteModalOpen: boolean;
 }
 
+export interface IStateHome{
+    courses: ICourse[];
+}
+
 export interface IFields {
     name: string;
     description: string;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Redirect, withRouter} from "react-router";
 import {IErrors, IProps, IState} from "./types";
-import {createCourse, updateCourse} from "../../api";
+import {createCourse, getCourse, updateCourse} from "../../api";
 import {
     Button,
     CircularProgress,
@@ -42,7 +42,13 @@ class updateForm extends React.Component<IProps, IState> {
     };
 
     componentDidMount() {
-        this.setState({isNew: false});
+        const { match } = this.props;
+        if (match.params.id) {
+            getCourse(match.params.id).then(this.handleResponse).then(this.receiveCourse);
+            this.setState({ isNew: false});
+        } else {
+            this.setState({ isNew: true });
+        }
     }
 
     redirect = () => {
@@ -89,29 +95,24 @@ class updateForm extends React.Component<IProps, IState> {
 
     handleChange = (prop: string) => (event: any) => {
 
-        if (prop === 'id') {
+        // if (prop === 'id') {
+        //     getCourse(prop).then(this.handleResponse).then(this.receiveCourse);
+        //     // this.state.course = getCourse(prop);
+        // }
+        // else {
+        //     this.setState({
+        //         ...this.state,
+        //         fields: {
+        //             ...this.state.fields,
+        //             [prop]: event.target.value,
+        //         },
+        //     });
+        // }
 
-            this.setState({
-                ...this.state,
-                fields: {
-                    ...this.state.fields,
-                    name: 'aName',
-                    description: 'aDescription',
-                    platform: 'aPlatform',
-                    link: 'aLink'
-                }
-            })
-        }
-        else {
-            this.setState({
-                ...this.state,
-                fields: {
-                    ...this.state.fields,
-                    [prop]: event.target.value,
-                },
-            });
-        }
+    };
 
+    receiveCourse = (course: ICourse) => {
+        this.setState({course})
     };
 
     handleSubmit = () => {

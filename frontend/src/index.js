@@ -4,7 +4,7 @@ import './index.css';
 import CourseForm from './components/CourseForm/courseForm.tsx'
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router } from 'react-router-dom';
-import Home from "./components/home/home";
+import Home from "./components/home/coursesTable";
 import {Route} from "react-router";
 import UpdateForm from "./components/UpdateForm/updateForm";
 
