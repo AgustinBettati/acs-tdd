@@ -14,6 +14,7 @@ const App = () => {
         <Router>
             <Route path="/course" component={CourseForm} />
             <Route path="/home" component={Home} />
+            <Route path="/" component={Home} />
             <Route path="/update" component={UpdateForm} />
         </Router>)
 };
