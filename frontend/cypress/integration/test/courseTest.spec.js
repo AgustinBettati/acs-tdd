@@ -40,13 +40,21 @@ describe('Register test', function() {
         id.type('1');
 
         cy.wait(500);
-        cy.get('[id="course-name"]').should('not.have.value', '');
+        const courseName = cy.get('[id="course-name"]').should('not.have.value', '');
         cy.get('[id="course-description"]').should('not.have.value', '');
         cy.get('[id="course-platform"]').should('not.have.value' , '');
         cy.get('[id="course-link"]').should('not.have.value' , '');
 
-
+        courseName.type('NUEVONOMBRE');
         cy.contains("DELETE");
-        cy.contains("SAVE").click()
+        cy.contains("SAVE").click();
+
+        cy.url().should('include', '/home');
+
+        cy.contains('NUEVONOMBRE')
+
+
+
+
     })
 });
