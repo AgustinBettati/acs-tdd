@@ -55,12 +55,14 @@ public class CourseController {
     }
 
     @GetMapping(value = "/course")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<List<ExternalCourse>> getAllCourses() {
         List<ExternalCourse> externalCourses = courseService.getAllCourses();
         return new ResponseEntity<>(externalCourses, HttpStatus.OK);
     }
 
     @GetMapping(value = "/course/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity getCourseById(@PathVariable("id") String id) {
         return courseService.getCourseById(id)
                 .map(found -> new ResponseEntity<>(found, HttpStatus.OK))

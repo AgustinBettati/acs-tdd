@@ -4,7 +4,7 @@ import './index.css';
 import CourseForm from './components/CourseForm/courseForm.tsx'
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router } from 'react-router-dom';
-import Home from "./components/home/home";
+import Home from "./components/home/coursesTable";
 import {Route} from "react-router";
 import UpdateForm from "./components/UpdateForm/updateForm";
 
@@ -12,9 +12,8 @@ import UpdateForm from "./components/UpdateForm/updateForm";
 const App = () => {
     return (
         <Router>
-            <Route path="/course" component={CourseForm} />
             <Route path="/home" component={Home} />
-            <Route path="/" component={Home} />
+            <Route path="/course" component={CourseForm} />
             <Route path="/update" component={UpdateForm} />
         </Router>)
 };

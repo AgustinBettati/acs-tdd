@@ -27,3 +27,23 @@ export const updateCourse = (course: ICourse): Promise<Response> => {
 
     return fetch(url, init);
 };
+
+export const getCourse = (id: string): Promise<Response> => {
+    const url = `${baseUrl}/course/${id}`;
+    const init: RequestInit = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+    return fetch(url, init);
+};
+
+export const getCourses = (): Promise<Response> => {
+    const url = baseUrl + '/course';
+    const init: RequestInit = {
+        method: 'GET',
+    };
+
+    return fetch(url, init);
+};
