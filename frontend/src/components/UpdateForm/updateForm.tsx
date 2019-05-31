@@ -1,19 +1,19 @@
 import * as React from 'react';
-import {withRouter} from "react-router";
+import {Redirect, withRouter} from "react-router";
 import {IErrors, IProps, IState} from "./types";
-import {createCourse, getCourse, updateCourse} from "../../api";
+import { getCourse, updateCourse} from "../../api";
 import {
     Button,
     CircularProgress,
+    Typography,
     Card,
     CardHeader,
     CardContent,
+    FormControl,
+    Input,
+    InputLabel,
     CardActions,
 } from '@material-ui/core';
-import CssBaseline from "../CourseForm/courseForm";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import TextField from "@material-ui/core/TextField";
 
 const styles = require('./updateForm.css');
 
@@ -115,30 +115,29 @@ class updateForm extends React.Component<IProps, IState> {
                         }
                     })
                     // console.log(course2);
+                })
+                .catch(() => {
+                    console.log('not found')
                 });
 
             });
 
 
-        } else {
-            this.setState({
-                ...this.state,
-                fields: {
-                    ...this.state.fields,
-                    [prop]: event.target.value,
-                },
-            });
         }
+        this.setState({
+            ...this.state,
+            fields: {
+                ...this.state.fields,
+                [prop]: event.target.value,
+            },
+        });
+
 
     };
 
     handleSubmit = () => {
         if (this.validateAll()) {
-            if (!this.state.isNew) {
-                updateCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
-            } else {
-                createCourse(this.state.fields).then(() => this.setState({redirect: '/home'}));
-            }
+            updateCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
         }
     };
 
@@ -175,7 +174,12 @@ class updateForm extends React.Component<IProps, IState> {
     };
 
     validateLink = (value: any): boolean => {
-        return value !== '' && value.includes('www.');
+        const regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+        if (regexp.test(value)) {
+            return true;
+        } else {
+            return false;
+        }
     };
 
 
@@ -205,115 +209,86 @@ class updateForm extends React.Component<IProps, IState> {
     };
 
     render() {
-        const {fields, errors, isCreating} = this.state;
+        const {fields, errors, isCreating, redirect} = this.state;
+
+        if (redirect) {
+            return <Redirect to={redirect}/>;
+        }
 
         if (isCreating) {
             return <div><CircularProgress/></div>
         }
 
         return (
-            <Container component="main" maxWidth="xs">
-                <CssBaseline/>
-                <div className={'paper center-content'}>
-                    <Grid container direction={'row'}>
-                        <Grid item direction={'column'}>
-                        </Grid>
-                        <Grid item direction={'column'}>
-                            <Card className={'new-course'}>
-                                <Grid container>
-                                    <Grid item direction={'row'}>
-                                        <CardHeader className={'center-content'} title={this.getHeader()} />
-                                        <CardContent>{this.renderTitle()}</CardContent>
-                                    </Grid>
-                                    <Grid item direction={'row'}>
-                                        <CardContent>
-                                            <form className={'form'}>
-                                                <TextField
-                                                    variant="outlined"
-                                                    margin="normal"
-                                                    required
-                                                    fullWidth
-                                                    label="Id"
-                                                    name="id"
-                                                    id='course-id'
-                                                    placeholder={'Enter the id of the course to update'}
-                                                    value={fields.id}
-                                                    error={errors.id}
-                                                    onChange={this.handleChange('id')}
-                                                />
-                                                <TextField
-                                                    variant="outlined"
-                                                    margin="normal"
-                                                    required
-                                                    fullWidth
-                                                    label="Name"
-                                                    name="name"
-                                                    id='course-name'
-                                                    value={fields.name}
-                                                    error={errors.name}
-                                                    onChange={this.handleChange('name')}
-                                                    placeholder={'Previous name'}
-                                                />
-                                                <TextField
-                                                    variant="outlined"
-                                                    margin="normal"
-                                                    required
-                                                    fullWidth
-                                                    label="Description"
-                                                    name="description"
-                                                    id='course-description'
-                                                    value={fields.description}
-                                                    error={errors.description}
-                                                    onChange={this.handleChange('description')}
-                                                />
-                                                <TextField
-                                                    variant="outlined"
-                                                    margin="normal"
-                                                    required
-                                                    fullWidth
-                                                    label="Platform"
-                                                    name="platform"
-                                                    id='course-platform'
-                                                    value={fields.platform}
-                                                    error={errors.platform}
-                                                    onChange={this.handleChange('platform')}
-                                                />
-                                                <TextField
-                                                    variant="outlined"
-                                                    margin="normal"
-                                                    required
-                                                    fullWidth
-                                                    label="Link"
-                                                    name="link"
-                                                    id='course-link'
-                                                    value={fields.link}
-                                                    error={errors.link}
-                                                    onChange={this.handleChange('link')}
-                                                />
-                                            </form>
-                                        </CardContent>
-                                    </Grid>
-                                    <Grid item direction={'row'}>
-                                        <CardActions>
-                                            <Button
-                                                variant='contained'
-                                                color='primary'
-                                                id='submit-button'
-                                                className={'save-button'}
-                                                onClick={this.handleSubmit}
-                                            >
-                                                Save
-                                            </Button>
-                                        </CardActions>
-                                    </Grid>
-                                </Grid>
-                            </Card>
-                        </Grid>
-                        <Grid item direction={'column'}>
-                        </Grid>
-                    </Grid>
-                </div>
-            </Container>
+            <div className={styles.NewCourse}>
+                <Typography className={styles['New-course-title']} color='textSecondary'>
+
+                       Edit course
+
+                </Typography>
+                <Card className={styles['New-course-box']}>
+                    <CardHeader title={this.renderTitle()} className={styles.displayName}/>
+                    <CardContent>
+                        <form className={styles['New-course-form']}>
+
+                            <FormControl className={styles['course-form-control']} error={errors.name}>
+                                <InputLabel required htmlFor='admin-name'>Id</InputLabel>
+                                <Input id='course-id'
+                                       value={fields.id}
+                                       onChange={this.handleChange('id')}
+                                       placeholder={'Enter the id of the course to update'}
+                                />
+                            </FormControl>
+                            <FormControl className={styles['course-form-control']} error={errors.name}>
+                                <InputLabel required htmlFor='admin-name'>Name</InputLabel>
+                                <Input id='course-name'
+                                       value={fields.name}
+                                       onChange={this.handleChange('name')}
+                                       placeholder={'previousName'}
+                                />
+                            </FormControl>
+                            <FormControl className={styles['course-form-control']} error={errors.description}>
+                                <InputLabel required htmlFor='course-description'>Description</InputLabel>
+                                <Input id='course-description'
+                                       value={fields.description}
+                                       onChange={this.handleChange('description')}
+                                />
+                            </FormControl>
+                            <FormControl className={styles['course-form-control']} error={errors.platform}>
+                                <InputLabel required htmlFor='course-platform'>Platform</InputLabel>
+                                <Input id='course-platform'
+                                       value={fields.platform}
+                                       onChange={this.handleChange('platform')}
+                                />
+                            </FormControl>
+                            <FormControl className={styles['course-form-control']} error={errors.link}>
+                                <InputLabel required htmlFor='course-link'>Link</InputLabel>
+                                <Input id='course-link'
+                                       value={fields.link}
+                                       onChange={this.handleChange('link')}
+                                />
+                            </FormControl>
+                        </form>
+                    </CardContent>
+
+                    <CardActions>
+                        <div className={styles.buttonContainer}>
+                            {
+                                <Button
+                                    variant='contained'
+                                    color='primary'
+                                    className={styles['create-admin-button']}
+                                    onClick={this.handleSubmit}
+                                >
+                                    SAVE
+                                </Button>
+                            }
+                        </div>
+                    </CardActions>
+
+                </Card>
+            </div>
+
         );
     }
 }

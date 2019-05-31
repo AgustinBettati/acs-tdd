@@ -16,7 +16,7 @@ export const createCourse = (course: ICourse): Promise<Response> => {
 
 // @ts-ignore
 export const updateCourse = (course: ICourse): Promise<Response> => {
-    const url = `${baseUrl}/course/${course.id}`;
+    const url = `${baseUrl}/course`;
     const init: RequestInit = {
         method: 'PUT',
         headers: {
