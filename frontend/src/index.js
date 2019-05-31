@@ -12,9 +12,8 @@ import UpdateForm from "./components/UpdateForm/updateForm";
 const App = () => {
     return (
         <Router>
-            <Route path="/course" component={CourseForm} />
             <Route path="/home" component={Home} />
-            <Route path="/" component={Home} />
+            <Route path="/course" component={CourseForm} />
             <Route path="/update" component={UpdateForm} />
         </Router>)
 };

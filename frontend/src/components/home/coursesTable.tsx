@@ -7,6 +7,9 @@ import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import IconButton from "@material-ui/core/IconButton";
+import Icon from "@material-ui/core/Icon";
+import Typography from "@material-ui/core/Typography";
+const styles = require('./courseTable.css');
 
 class coursesTable extends React.Component<IProps, IStateHome> {
 
@@ -37,10 +40,14 @@ class coursesTable extends React.Component<IProps, IStateHome> {
     render() {
         const{courses} = this.state;
         return(
-            <div>
-                <h1>Home</h1>
+            <div className={'paper'}>
+                <Typography className={styles['Table-title']} color='textPrimary'>{
+                    `Home`
+                }</Typography>
 
-                <h3>Courses table</h3>
+                <Typography className={styles['Table-title']} color='textPrimary'>{
+                    `Courses table`
+                }</Typography>
 
                 <table>
                     <TableHead>
@@ -65,7 +72,8 @@ class coursesTable extends React.Component<IProps, IStateHome> {
                                             {/*        <Edit/>*/}
                                             {/*    </IconButton>*/}
                                             {/*</Link>*/}
-                                            <IconButton onClick={() => this.handleEditCourse(row.id)}>EDIT</IconButton>
+
+                                            <IconButton onClick={() => this.handleEditCourse(row.id)}><Icon>edit_icon</Icon></IconButton>
                                         </TableCell>
                                     </TableRow>
                                 );
