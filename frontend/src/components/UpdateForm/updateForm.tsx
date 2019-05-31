@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Redirect, withRouter} from "react-router";
 import {IErrors, IProps, IState} from "./types";
-import {createCourse, getCourse, updateCourse} from "../../api";
+import { getCourse, updateCourse} from "../../api";
 import {
     Button,
     CircularProgress,
@@ -42,12 +42,12 @@ class updateForm extends React.Component<IProps, IState> {
     };
 
     componentDidMount() {
-        const { match } = this.props;
+        const {match} = this.props;
         if (match.params.id) {
             // getCourse(match.params.id).then(this.handleResponse).then(this.receiveCourse);
-            this.setState({ isNew: false});
+            this.setState({isNew: false});
         } else {
-            this.setState({ isNew: true });
+            this.setState({isNew: true});
         }
     }
 
@@ -96,42 +96,48 @@ class updateForm extends React.Component<IProps, IState> {
     handleChange = (prop: string) => (event: any) => {
 
         if (prop === 'id') {
+            console.log(event.target.value);
+            console.log(prop);
 
             // @ts-ignore
-            getCourse(prop).then((course2 : ICourse) => {
-                this.setState({
-                    ...this.state,
-                    fields: {
-                        ...this.state.fields,
-                        name: course2.name,
-                        description:course2.description,
-                        platform: course2.platform,
-                        link:course2.link
-                    }
+            getCourse(event.target.value).then((course) => {
+                const promise = course.json();
+                promise.then((course2: ICourse) => {
+
+                    this.setState({
+                        ...this.state,
+                        fields: {
+                            ...this.state.fields,
+                            name: course2.name,
+                            description: course2.description,
+                            platform: course2.platform,
+                            link: course2.link
+                        }
+                    })
+                    // console.log(course2);
                 })
+                .catch(() => {
+                    console.log('not found')
+                });
+
             });
 
 
         }
-        else {
-            this.setState({
-                ...this.state,
-                fields: {
-                    ...this.state.fields,
-                    [prop]: event.target.value,
-                },
-            });
-        }
+        this.setState({
+            ...this.state,
+            fields: {
+                ...this.state.fields,
+                [prop]: event.target.value,
+            },
+        });
+
 
     };
 
     handleSubmit = () => {
-        if(this.validateAll()){
-            if (!this.state.isNew) {
-                updateCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
-            } else {
-                createCourse(this.state.fields).then(() => this.setState({redirect: '/home'}));
-            }
+        if (this.validateAll()) {
+            updateCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
         }
     };
 
@@ -168,7 +174,12 @@ class updateForm extends React.Component<IProps, IState> {
     };
 
     validateLink = (value: any): boolean => {
-        return value !== '' && value.includes('www.');
+        const regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+        if (regexp.test(value)) {
+            return true;
+        } else {
+            return false;
+        }
     };
 
 
@@ -211,9 +222,9 @@ class updateForm extends React.Component<IProps, IState> {
         return (
             <div className={styles.NewCourse}>
                 <Typography className={styles['New-course-title']} color='textSecondary'>
-                    {
-                        this.getHeader()
-                    }
+
+                       Edit course
+
                 </Typography>
                 <Card className={styles['New-course-box']}>
                     <CardHeader title={this.renderTitle()} className={styles.displayName}/>
@@ -223,6 +234,7 @@ class updateForm extends React.Component<IProps, IState> {
                             <FormControl className={styles['course-form-control']} error={errors.name}>
                                 <InputLabel required htmlFor='admin-name'>Id</InputLabel>
                                 <Input id='course-id'
+                                       value={fields.id}
                                        onChange={this.handleChange('id')}
                                        placeholder={'Enter the id of the course to update'}
                                 />
