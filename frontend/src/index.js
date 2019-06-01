@@ -14,7 +14,7 @@ const App = () => {
         <Router>
             <Route path="/home" component={Home} />
             <Route path="/course" component={CourseForm} />
-            <Route path="/update" component={UpdateForm} />
+            <Route path="/update/:id" component={UpdateForm} />
         </Router>)
 };
 ReactDOM.render(<App/>, document.getElementById('root'));

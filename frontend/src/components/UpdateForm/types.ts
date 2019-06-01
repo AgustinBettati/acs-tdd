@@ -19,6 +19,7 @@ export interface IState {
 
 export interface IStateHome{
     courses: ICourse[];
+    redirect?: string;
 }
 
 export interface IFields {

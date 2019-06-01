@@ -1,5 +1,5 @@
 import * as React from "react";
-import {withRouter} from "react-router";
+import {Redirect, withRouter} from "react-router";
 import {IProps, IStateHome} from "../UpdateForm/types";
 import {getCourses} from "../../api";
 import {TableHead} from "@material-ui/core";
@@ -34,11 +34,16 @@ class coursesTable extends React.Component<IProps, IStateHome> {
     };
 
     private handleEditCourse(id: string) {
-        return undefined;
+        this.setState({redirect: '/update/' + id});
     }
 
     render() {
-        const{courses} = this.state;
+        const{courses, redirect} = this.state;
+
+        if (redirect) {
+            return <Redirect to={redirect}/>;
+        }
+
         return(
             <div className={'paper'}>
                 <Typography className={styles['Table-title']} color='textPrimary'>{

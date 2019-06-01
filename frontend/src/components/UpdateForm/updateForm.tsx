@@ -7,7 +7,7 @@ import {
     CircularProgress,
     Typography,
     Card,
-    CardHeader,
+    // CardHeader,
     CardContent,
     FormControl,
     Input,
@@ -43,11 +43,9 @@ class updateForm extends React.Component<IProps, IState> {
 
     componentDidMount() {
         const {match} = this.props;
+
         if (match.params.id) {
-            // getCourse(match.params.id).then(this.handleResponse).then(this.receiveCourse);
-            this.setState({isNew: false});
-        } else {
-            this.setState({isNew: true});
+            this.obtainCourseAndSetState(match.params.id)
         }
     }
 
@@ -98,31 +96,7 @@ class updateForm extends React.Component<IProps, IState> {
         if (prop === 'id') {
             console.log(event.target.value);
             console.log(prop);
-
-            // @ts-ignore
-            getCourse(event.target.value).then((course) => {
-                const promise = course.json();
-                promise.then((course2: ICourse) => {
-
-                    this.setState({
-                        ...this.state,
-                        fields: {
-                            ...this.state.fields,
-                            name: course2.name,
-                            description: course2.description,
-                            platform: course2.platform,
-                            link: course2.link
-                        }
-                    })
-                    // console.log(course2);
-                })
-                .catch(() => {
-                    console.log('not found')
-                });
-
-            });
-
-
+            this.obtainCourseAndSetState(event.target.value)
         }
         this.setState({
             ...this.state,
@@ -131,13 +105,37 @@ class updateForm extends React.Component<IProps, IState> {
                 [prop]: event.target.value,
             },
         });
-
-
     };
+
+    obtainCourseAndSetState(id: number){
+        // @ts-ignore
+        getCourse(id).then((course) => {
+            const promise = course.json();
+            promise.then((course2: ICourse) => {
+
+                this.setState({
+                    ...this.state,
+                    fields: {
+                        ...this.state.fields,
+                        name: course2.name,
+                        description: course2.description,
+                        platform: course2.platform,
+                        link: course2.link,
+                        id: course2.id
+                    }
+                })
+                // console.log(course2);
+            })
+                .catch(() => {
+                    console.log('not found')
+                });
+
+        });
+    }
 
     handleSubmit = () => {
         if (this.validateAll()) {
-            updateCourse(this.state.fields).then(() => this.setState({redirect: '/'}));
+            updateCourse(this.state.fields).then(() => this.setState({redirect: '/home'}));
         }
     };
 
@@ -227,18 +225,10 @@ class updateForm extends React.Component<IProps, IState> {
 
                 </Typography>
                 <Card className={styles['New-course-box']}>
-                    <CardHeader title={this.renderTitle()} className={styles.displayName}/>
+                    {/*<CardHeader title={this.renderTitle()} className={styles.displayName}/>*/}
                     <CardContent>
                         <form className={styles['New-course-form']}>
 
-                            <FormControl className={styles['course-form-control']} error={errors.name}>
-                                <InputLabel required htmlFor='admin-name'>Id</InputLabel>
-                                <Input id='course-id'
-                                       value={fields.id}
-                                       onChange={this.handleChange('id')}
-                                       placeholder={'Enter the id of the course to update'}
-                                />
-                            </FormControl>
                             <FormControl className={styles['course-form-control']} error={errors.name}>
                                 <InputLabel required htmlFor='admin-name'>Name</InputLabel>
                                 <Input id='course-name'
