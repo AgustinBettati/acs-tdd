@@ -1,22 +1,29 @@
-tages:
-  - test
-  - build
-  - deploy
+services:
+  - postgres:9.6
 
-test:
-  stage: test
-  script: echo "Running tests"
+variables: 
+  POSTGRES_DB: spatialspring
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: "admin"
+  SPRING_CONFIG_LOCATION: classpath:application-test.properties
 
-build:
-  stage: build
-  script: echo "Building the app"
+stages:
+  - test_backend
+  - test_frontend
 
-deploy_staging:
-  stage: deploy
-  script:
-    - echo "Deploy to staging server"
-  environment:
-    name: staging
-    url: https://staging.example.com
-  only:
-  - master
+test backend:
+  image: java:8-jdk
+  stage: test_backend
+  before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+  cache:
+    paths:
+      - .gradle/wrapper
+      - .gradle/caches
+  script: cd backend && ./gradlew clean test --info
+
+test frontend:
+  image: node:latest
+  stage: test_frontend
+  script: cd frontend && npm install && npm test
+
