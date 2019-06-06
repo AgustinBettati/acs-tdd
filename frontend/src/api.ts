@@ -1,4 +1,4 @@
-export const baseUrl = 'http://localhost:4326';
+export const baseUrl = 'http://localhost:4326/api';
 
 // @ts-ignore
 export const createCourse = (course: ICourse): Promise<Response> => {

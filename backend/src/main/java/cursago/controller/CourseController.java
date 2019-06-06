@@ -25,8 +25,8 @@ public class CourseController {
         this.courseService = courseService;
     }
 
-    @PostMapping(value = "/course")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping(value = "/api/course")
+//    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity postCourse(@RequestBody @Valid ExternalCourse externalCourse) {
         if (courseService.existsCourseWithName(externalCourse.getName())) {
             return new ResponseEntity<>("name has already been registered", HttpStatus.CONFLICT);
@@ -38,8 +38,8 @@ public class CourseController {
         return new ResponseEntity<>(id, headers, HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/course")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @PutMapping(value = "/api/course")
+//    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity updateCourse(@RequestBody @Valid ExternalCourseEdit externalCourseEdit) {
         Optional<ExternalCourse> optionalCourse = courseService.getCourseById(externalCourseEdit.getId());
         if (!optionalCourse.isPresent()) {
@@ -54,15 +54,15 @@ public class CourseController {
         return ResponseEntity.ok(editedExternalCourse);
     }
 
-    @GetMapping(value = "/course")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping(value = "/api/course")
+//    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<List<ExternalCourse>> getAllCourses() {
         List<ExternalCourse> externalCourses = courseService.getAllCourses();
         return new ResponseEntity<>(externalCourses, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/course/{id}")
-    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping(value = "/api/course/{id}")
+//    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity getCourseById(@PathVariable("id") String id) {
         return courseService.getCourseById(id)
                 .map(found -> new ResponseEntity<>(found, HttpStatus.OK))

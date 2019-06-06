@@ -36,7 +36,7 @@ public class ExternalCourseIntegrationTest {
     @Before
     public void setup() {
         restTemplate = new TestRestTemplate();
-        String targetUrl = "http://localhost:" + port;
+        String targetUrl = "http://localhost:" + port +"/api";
         courseGateway = new CourseGateway(targetUrl);
     }
 
