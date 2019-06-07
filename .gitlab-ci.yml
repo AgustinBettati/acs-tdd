@@ -1,15 +1,15 @@
 services:
   - postgres:9.6
 
-variables: 
+variables:
   POSTGRES_DB: spatialspring
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: "admin"
   SPRING_CONFIG_LOCATION: classpath:application-test.properties
 
 stages:
-  - test_backend
   - test_frontend
+  - test_backend
 
 test backend:
   image: java:8-jdk
@@ -21,9 +21,24 @@ test backend:
       - .gradle/wrapper
       - .gradle/caches
   script: cd backend && ./gradlew clean test --info
+  artifacts:
+    path:
+       - backend/build/test-results/TEST-*.xml
+    expire_in: 1 week
+  artifacts:
+    name: reports
+    reports:
+      junit: backend/build/test-results/TEST-*.xml
+    when: always
+    expire_in: 1 week
 
 test frontend:
   image: node:latest
   stage: test_frontend
-  script: cd frontend && npm install && npm test
+  script: cd frontend && npm install && npm test && npm run build
+  artifacts:
+    name: frontend_build
+    paths: 
+    - frontend/build/*
+    expire_in: 1 week
 
