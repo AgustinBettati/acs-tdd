@@ -26,7 +26,7 @@ public class CourseController {
     }
 
     @PostMapping(value = "/api/course")
-//    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:4326"})
     public ResponseEntity postCourse(@RequestBody @Valid ExternalCourse externalCourse) {
         if (courseService.existsCourseWithName(externalCourse.getName())) {
             return new ResponseEntity<>("name has already been registered", HttpStatus.CONFLICT);
@@ -39,7 +39,7 @@ public class CourseController {
     }
 
     @PutMapping(value = "/api/course")
-//    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:4326"})
     public ResponseEntity updateCourse(@RequestBody @Valid ExternalCourseEdit externalCourseEdit) {
         Optional<ExternalCourse> optionalCourse = courseService.getCourseById(externalCourseEdit.getId());
         if (!optionalCourse.isPresent()) {
@@ -55,14 +55,14 @@ public class CourseController {
     }
 
     @GetMapping(value = "/api/course")
-//    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:4326"})
     public ResponseEntity<List<ExternalCourse>> getAllCourses() {
         List<ExternalCourse> externalCourses = courseService.getAllCourses();
         return new ResponseEntity<>(externalCourses, HttpStatus.OK);
     }
 
     @GetMapping(value = "/api/course/{id}")
-//    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:4326"})
     public ResponseEntity getCourseById(@PathVariable("id") String id) {
         return courseService.getCourseById(id)
                 .map(found -> new ResponseEntity<>(found, HttpStatus.OK))
