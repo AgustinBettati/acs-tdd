@@ -25,13 +25,12 @@ test backend:
     - ./gradlew clean test --info
 
 test frontend:
-  image: node:latest
+  image: tmaier/docker-compose:latest
   stage: test_frontend
-  script: 
-    - cd backend
-    - ./gradlew clean bootRun
+  script:
+    - docker-compose down
+    - docker-compose up --force-recreate
     - cd ../frontend
     - npm install 
-    - npm start
     - npm test
 
