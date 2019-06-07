@@ -20,10 +20,18 @@ test backend:
     paths:
       - .gradle/wrapper
       - .gradle/caches
-  script: cd backend && ./gradlew clean test --info
+  script: 
+    - cd backend
+    - ./gradlew clean test --info
 
 test frontend:
   image: node:latest
   stage: test_frontend
-  script: cd frontend && npm install && npm test
+  script: 
+    - cd backend
+    - ./gradlew clean bootRun
+    - cd ../frontend
+    - npm install 
+    - npm start
+    - npm test
 
