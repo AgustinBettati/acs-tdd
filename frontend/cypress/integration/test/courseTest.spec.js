@@ -6,8 +6,8 @@ describe('Register test', function() {
 
         cy.get('[id="course-name"]').type('Matematica');
         cy.get('[id="course-description"]').type('This is a description');
-        cy.get('[id="course-platform"]').type('Platform');
-        cy.get('[id="course-link"]').type('www.link.com');
+        cy.get('[id="course-platform"]').type('una plataforma');
+        cy.get('[id="course-link"]').type('https://link.com');
         cy.get('[id="submit-button"]').click();
 
         cy.contains("Home")
@@ -19,42 +19,19 @@ describe('Register test', function() {
         cy.contains("Create course");
         cy.get('[id="course-name"]').type('Matematica');
         cy.get('[id="course-description"]').type('This is a description');
-        cy.get('[id="course-platform"]').type('Platform');
+        cy.get('[id="course-platform"]').type('una plataforma');
         cy.get('[id="course-link"]').type('no es un link');
         cy.get('[id="submit-button"]').click();
 
         cy.contains("Create course")
     });
 
-    it('should visit update page and bring all the respective info', function() {
-        cy.visit('http://localhost:3000/update');
+    it('should visit home page and show created course', function() {
+        cy.visit('http://localhost:3000/home');
 
-        cy.contains("Edit course");
-
-        cy.get('[id="course-name"]').should('be.empty');
-        cy.get('[id="course-description"]').should('be.empty');
-        cy.get('[id="course-platform"]').should('be.empty');
-        cy.get('[id="course-link"]').should('be.empty');
-        const id = cy.get('[id="course-id"]');
-        id.should('be.empty');
-        id.type('1');
-
-        cy.wait(500);
-        const courseName = cy.get('[id="course-name"]').should('not.have.value', '');
-        cy.get('[id="course-description"]').should('not.have.value', '');
-        cy.get('[id="course-platform"]').should('not.have.value' , '');
-        cy.get('[id="course-link"]').should('not.have.value' , '');
-
-        courseName.type('NUEVONOMBRE');
-        cy.contains("DELETE");
-        cy.contains("SAVE").click();
-
-        cy.url().should('include', '/home');
-
-        cy.contains('NUEVONOMBRE')
-
-
-
-
+        cy.contains("Matematica");
+        cy.contains("una plataforma");
     })
+
+    //TODO hacer test para el edit
 });

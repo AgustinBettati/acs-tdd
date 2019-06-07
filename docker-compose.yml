@@ -1,7 +1,9 @@
 version: '3.3'
 
-# para correr solo la base de datos:
-# docker-compose run --service-ports database
+# ./gradlew clean build
+# docker-compose down
+# docker-compose build
+# docker-compose up --force-recreate
 
 services:
   database:
@@ -13,3 +15,8 @@ services:
       - POSTGRES_DBNAME=spatialspring
       - POSTGRES_USER=postgres
       - POSTGRES_PASS=admin
+
+  backend:
+    build: ./backend
+    ports:
+      - "4326:4326"
