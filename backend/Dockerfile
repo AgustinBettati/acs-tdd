@@ -9,3 +9,5 @@ WORKDIR /usr/app
 RUN sh -c 'touch backend-0.0.1.jar'
 
 ENTRYPOINT ["java","-jar","backend-0.0.1.jar"]
+
+#TODO que no copie solo el jar, que haga el build con el gradlew

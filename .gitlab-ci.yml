@@ -28,7 +28,7 @@ test frontend:
   image: tmaier/docker-compose:latest
   stage: test_frontend
   script:
-    - docker-compose down
+    - docker-compose down  #falta el dockerfile para react
     - docker-compose up --force-recreate
     - cd ../frontend
     - npm install 
