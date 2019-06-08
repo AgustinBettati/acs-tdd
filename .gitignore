@@ -6,4 +6,3 @@ out/
 .idea/
 .gradle/
 *.iml
-package-lock.json
