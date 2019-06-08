@@ -1,6 +1,6 @@
 describe('Register test', function() {
     it('register a course and go to home page', function() {
-        cy.visit('http://localhost:3000/course');
+        cy.visit('/course');
 
         cy.contains("Create course");
 
@@ -14,7 +14,7 @@ describe('Register test', function() {
     });
 
     it('register a course with invalid link and show error', function() {
-        cy.visit('http://localhost:3000/course');
+        cy.visit('/course');
 
         cy.contains("Create course");
         cy.get('[id="course-name"]').type('Matematica');
@@ -27,7 +27,7 @@ describe('Register test', function() {
     });
 
     it('should visit update page and bring all the respective info', function() {
-        cy.visit('http://localhost:3000/home');
+        cy.visit('/home');
 
         cy.contains("ed");
 
