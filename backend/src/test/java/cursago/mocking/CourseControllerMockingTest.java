@@ -38,7 +38,7 @@ public class CourseControllerMockingTest {
 
         ResponseEntity<?> result = successCourseController.postCourse(externalCourse);
 
-        assertEquals("/course/0b9e5535-1ca6-4a96-8d5b-0b54ec92c78f", result.getHeaders().getLocation().toString());
+        assertEquals("/api/course/0b9e5535-1ca6-4a96-8d5b-0b54ec92c78f", result.getHeaders().getLocation().toString());
         assertThat(result.getStatusCode(), is(HttpStatus.CREATED));
     }
 

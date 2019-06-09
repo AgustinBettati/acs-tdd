@@ -46,7 +46,7 @@ public class CourseControllerMockitoTest {
         ResponseEntity<?> result = courseController.postCourse(externalCourse);
 
         verify(courseService, atLeastOnce()).saveCourse(externalCourse);
-        assertEquals("/course/" + fakeId, result.getHeaders().getLocation().toString());
+        assertEquals("/api/course/" + fakeId, result.getHeaders().getLocation().toString());
         assertThat(result.getStatusCode(), is(HttpStatus.CREATED));
     }
 
