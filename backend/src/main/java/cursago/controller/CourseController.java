@@ -34,7 +34,7 @@ public class CourseController {
         String id = courseService.saveCourse(externalCourse);
         UriComponentsBuilder ucBuilder = UriComponentsBuilder.newInstance();
         HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/course/{id}").buildAndExpand(id).toUri());
+        headers.setLocation(ucBuilder.path("/api/course/{id}").buildAndExpand(id).toUri());
         return new ResponseEntity<>(id, headers, HttpStatus.CREATED);
     }
 
