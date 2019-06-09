@@ -6,17 +6,31 @@ variables:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: "admin"
   SPRING_CONFIG_LOCATION: classpath:application-test.properties
+  npm_config_cache: "$CI_PROJECT_DIR/.npm"
+  CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+  APT_CACHE_DIR: "$CI_PROJECT_DIR/apt-cache"
+  CYPRESS_BASE_URL: "http://localhost:4326"
+  
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+    - .npm
+    - cache/Cypress
+    - apt-cache
 
 stages:
-  - build_frontend
-  - build_backend
-  - test_frontend
-  - test_backend
+  - frontend_test_build_artifacts
+  - backend_test_build_artifacts
+  # - test_backend
+  - test_integration
 
 build:frontend:
-  image: node:latest
-  stage: build_frontend
-  script: cd frontend && npm install && npm run build
+  image: node:12.3.1
+  stage: frontend_test_build_artifacts
+  script: cd frontend && npm ci && npm test &&  npm run build
   artifacts:
     name: frontend_build
     paths: 
@@ -25,13 +39,7 @@ build:frontend:
 
 build:backend:
   image: java:8-jdk
-  stage: build_backend
-  before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
-  cache:
-    paths:
-      - .gradle/wrapper
-      - .gradle/caches
+  stage: backend_test_build_artifacts
   script: mkdir  backend/src/main/resources/public && cp -r frontend/build/*  backend/src/main/resources/public && cd backend && ./gradlew build 
   artifacts:
     paths:
@@ -39,25 +47,42 @@ build:backend:
   dependencies:
     - build:frontend
 
-test:backend:
-  image: java:8-jdk
-  stage: test_backend
-  before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
-  cache:
-    paths:
-      - .gradle/wrapper
-      - .gradle/caches
-  script: cd backend && ./gradlew clean test --info
-  artifacts:
-    name: reports
-    reports:
-      junit: backend/build/test-results/TEST-*.xml
-    when: always
-    expire_in: 1 week
+# test:backend:
+#   image: java:8-jdk
+#   stage: test_backend
+#   script: cd backend && ./gradlew clean test --info
+#   artifacts:
+#     name: reports
+#     reports:
+#       junit: backend/build/test-results/TEST-*.xml
+#     when: always
+#     expire_in: 1 week
 
-test:frontend:
-  image: node:latest
-  stage: test_frontend
-  script: cd frontend && npm install && npm test
+test:integration:
+  image: cypress/browsers:chrome67
+  stage: test_integration
+  # script: java -jar backend/build/libs/backend-0.0.1.jar 
+  before_script: 
+    - mkdir -pv $APT_CACHE_DIR || true
+    - apt-get update || true
+    - echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list
+    - echo "deb http://security.debian.org jessie/updates main" >> /etc/apt/sources.list
+    - echo "Acquire::Check-Valid-Until false;" | tee -a /etc/apt/apt.conf.d/10-nocheckvalid
+    - echo "deb http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+    # - echo "deb http://security.debian.org/debian-security jessie/updates main" >> /etc/apt/sources.list
+    - apt-get update  -y|| true
+    # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y apt-transport-https
+    - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -t jessie-backports -y openjdk-8-jre
+    - cd frontend && npm install -g wait-on
+    - java -jar $CI_PROJECT_DIR/backend/build/libs/backend-0.0.1.jar & wait-on http://localhost:4326
+    # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -t jessie-backports openjdk-8-jre
+    # - apt-get update  -qv|| true
+    # - wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - 
+    # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y software-properties-common 
+    # - add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ 
+    # - apt-get update -qv || true 
+    # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y adoptopenjdk-8-hotspot
+  script: cd $CI_PROJECT_DIR/frontend && npm ci && $(npm bin)/cypress run --record --key 09e33c06-8a43-427e-9207-17ef995538a8
+  dependencies:
+    - build:backend
 
