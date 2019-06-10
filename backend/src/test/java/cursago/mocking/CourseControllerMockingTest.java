@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
+import static cursago.Application.API_V1_BASE_URI;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.verification.VerificationModeFactory.atLeastOnce;
@@ -38,7 +39,7 @@ public class CourseControllerMockingTest {
 
         ResponseEntity<?> result = successCourseController.postCourse(externalCourse);
 
-        assertEquals("/api/course/0b9e5535-1ca6-4a96-8d5b-0b54ec92c78f", result.getHeaders().getLocation().toString());
+        assertEquals(API_V1_BASE_URI+"/course/0b9e5535-1ca6-4a96-8d5b-0b54ec92c78f", result.getHeaders().getLocation().toString());
         assertThat(result.getStatusCode(), is(HttpStatus.CREATED));
     }
 

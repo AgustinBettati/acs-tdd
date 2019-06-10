@@ -6,3 +6,5 @@ out/
 .idea/
 .gradle/
 *.iml
+backend/src/main/resources/public/
+
