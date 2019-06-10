@@ -10,7 +10,7 @@ variables:
   CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
   APT_CACHE_DIR: "$CI_PROJECT_DIR/apt-cache"
-  CYPRESS_BASE_URL: "http://localhost:4326"
+  CYPRESS_BASE_URL: http://localhost:4326
   
 
 cache:
@@ -74,7 +74,7 @@ test:integration:
     # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y apt-transport-https
     - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -t jessie-backports -y openjdk-8-jre
     - cd frontend && npm install -g wait-on
-    - java -jar $CI_PROJECT_DIR/backend/build/libs/backend-0.0.1.jar & wait-on http://localhost:4326 && sleep 10
+    - java -jar $CI_PROJECT_DIR/backend/build/libs/backend-0.0.1.jar & wait-on http://localhost:4326 && sleep 30
     # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -t jessie-backports openjdk-8-jre
     # - apt-get update  -qv|| true
     # - wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - 
@@ -82,7 +82,7 @@ test:integration:
     # - add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ 
     # - apt-get update -qv || true 
     # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y adoptopenjdk-8-hotspot
-  script: ps aux && cd $CI_PROJECT_DIR/frontend && npm ci && $(npm bin)/cypress run --record --key 09e33c06-8a43-427e-9207-17ef995538a8
+  script: ps aux && cd $CI_PROJECT_DIR/frontend && npm ci && $(npm bin)/cypress run --record --key 09e33c06-8a43-427e-9207-17ef995538a8 && ps aux
   dependencies:
     - build:backend
 
