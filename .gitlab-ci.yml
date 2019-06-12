@@ -73,9 +73,10 @@ deploy:gitlab_registry:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - cp $CI_PROJECT_DIR/backend/build/libs/backend-0.0.1.jar $CI_PROJECT_DIR/docker/app.jar
   script:
-    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker pull $CI_REGISTRY_IMAGE:test || true
     - cd $CI_PROJECT_DIR/docker
-    - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:test .
+    # - docker-compose --cache-from $CI_REGISTRY_IMAGE:test --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:test build app 
+    - docker build --cache-from $CI_REGISTRY_IMAGE:test --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:test .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     - docker push $CI_REGISTRY_IMAGE:test
 
@@ -83,28 +84,27 @@ deploy:gitlab_registry:
     - build:backend
 
 
-test:integration:
+.test:integration:
   image: cypress/browsers:chrome67
   stage: test_integration
   # script: java -jar backend/build/libs/backend-0.0.1.jar 
-  services:
-   - name: registry.gitlab.com/david.cerbino/acstdd:test
-     alias: app
+  # services:
+  #  - name: registry.gitlab.com/david.cerbino/acstdd:test
+  #    alias: app
   variables:
-    CYPRESS_BASE_URL: http://app:4326
+    CYPRESS_BASE_URL: http://127.0.0.1:4326
 
   before_script: 
-    # - mkdir -pv $APT_CACHE_DIR || true
-    # - apt-get update || true
-    # - echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list
-    # - echo "deb http://security.debian.org jessie/updates main" >> /etc/apt/sources.list
-    # - echo "Acquire::Check-Valid-Until false;" | tee -a /etc/apt/apt.conf.d/10-nocheckvalid
-    # - echo "deb http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
-    # - echo "deb http://security.debian.org/debian-security jessie/updates main" >> /etc/apt/sources.list
-    # - apt-get update  -y|| true
-    # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y apt-transport-https
-    # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -t jessie-backports -y openjdk-8-jre
-    # - cd frontend && npm install -g wait-on
+    - mkdir -pv $APT_CACHE_DIR || true
+    - apt-get update || true
+    - echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list
+    - echo "deb http://security.debian.org jessie/updates main" >> /etc/apt/sources.list
+    - echo "Acquire::Check-Valid-Until false;" | tee -a /etc/apt/apt.conf.d/10-nocheckvalid
+    - echo "deb http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+    - echo "deb http://security.debian.org/debian-security jessie/updates main" >> /etc/apt/sources.list
+    - apt-get update  -y|| true
+    - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -t jessie-backports -y openjdk-8-jre
+    - cd frontend && npm install -g wait-on
     - cd $CI_PROJECT_DIR/frontend && npm ci
     # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -t jessie-backports openjdk-8-jre
     # - apt-get update  -qv|| true
@@ -114,7 +114,7 @@ test:integration:
     # - apt-get update || true 
     # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y adoptopenjdk-8-hotspot
   script: 
-    #  - java -jar $CI_PROJECT_DIR/backend/build/libs/backend-0.0.1.jar & 
+     - java -jar $CI_PROJECT_DIR/backend/build/libs/backend-0.0.1.jar & 
      - wait-on  $CYPRESS_BASE_URL
      - $(npm bin)/cypress run --record --key 09e33c06-8a43-427e-9207-17ef995538a8
   dependencies:
