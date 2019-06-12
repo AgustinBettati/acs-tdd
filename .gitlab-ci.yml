@@ -10,7 +10,8 @@ variables:
   CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
   APT_CACHE_DIR: "$CI_PROJECT_DIR/apt-cache"
-  CYPRESS_BASE_URL: http://localhost:4326
+  # CYPRESS_BASE_URL: http://localhost:4326
+  CYPRESS_PAGE_LOAD_TIMEOUT: 400000
   
 
 cache:
@@ -24,7 +25,7 @@ cache:
 stages:
   - frontend_test_build_artifacts
   - backend_test_build_artifacts
-  # - test_backend
+  - deploy4test
   - test_integration
 
 build:frontend:
@@ -58,31 +59,70 @@ build:backend:
 #     when: always
 #     expire_in: 1 week
 
+
+deploy:gitlab_registry:
+  image: tico/docker
+  stage: deploy4test
+  services:
+  - docker:dind
+
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+  before_script: 
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - cp $CI_PROJECT_DIR/backend/build/libs/backend-0.0.1.jar $CI_PROJECT_DIR/docker/app.jar
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - cd $CI_PROJECT_DIR/docker
+    - docker build --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA --tag $CI_REGISTRY_IMAGE:test .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:test
+
+  dependencies:
+    - build:backend
+
+
 test:integration:
   image: cypress/browsers:chrome67
   stage: test_integration
   # script: java -jar backend/build/libs/backend-0.0.1.jar 
+  services:
+   - name: registry.gitlab.com/david.cerbino/acstdd:test
+     alias: app
+  variables:
+    CYPRESS_BASE_URL: http://app:4326
+
   before_script: 
-    - mkdir -pv $APT_CACHE_DIR || true
-    - apt-get update || true
-    - echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list
-    - echo "deb http://security.debian.org jessie/updates main" >> /etc/apt/sources.list
-    - echo "Acquire::Check-Valid-Until false;" | tee -a /etc/apt/apt.conf.d/10-nocheckvalid
-    - echo "deb http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
+    # - mkdir -pv $APT_CACHE_DIR || true
+    # - apt-get update || true
+    # - echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list
+    # - echo "deb http://security.debian.org jessie/updates main" >> /etc/apt/sources.list
+    # - echo "Acquire::Check-Valid-Until false;" | tee -a /etc/apt/apt.conf.d/10-nocheckvalid
+    # - echo "deb http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
     # - echo "deb http://security.debian.org/debian-security jessie/updates main" >> /etc/apt/sources.list
-    - apt-get update  -y|| true
+    # - apt-get update  -y|| true
     # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y apt-transport-https
-    - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -t jessie-backports -y openjdk-8-jre
-    - cd frontend && npm install -g wait-on
-    - java -jar $CI_PROJECT_DIR/backend/build/libs/backend-0.0.1.jar & wait-on http://localhost:4326 && sleep 30
+    # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -t jessie-backports -y openjdk-8-jre
+    # - cd frontend && npm install -g wait-on
+    - cd $CI_PROJECT_DIR/frontend && npm ci
     # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -t jessie-backports openjdk-8-jre
     # - apt-get update  -qv|| true
     # - wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - 
     # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y software-properties-common 
     # - add-apt-repository --yes https://adoptopenjdk.jfrog.io/adoptopenjdk/deb/ 
-    # - apt-get update -qv || true 
+    # - apt-get update || true 
     # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -y adoptopenjdk-8-hotspot
-  script: ps aux && cd $CI_PROJECT_DIR/frontend && npm ci && $(npm bin)/cypress run --record --key 09e33c06-8a43-427e-9207-17ef995538a8 && ps aux
+  script: 
+    #  - java -jar $CI_PROJECT_DIR/backend/build/libs/backend-0.0.1.jar & 
+     - wait-on  $CYPRESS_BASE_URL
+     - $(npm bin)/cypress run --record --key 09e33c06-8a43-427e-9207-17ef995538a8
   dependencies:
     - build:backend
+  artifacts:
+    when: always
+    paths:
+      - $CI_PROJECT_DIR/frontend/cypress/videos/**/*.mp4
+      - $CI_PROJECT_DIR/frontend/cypress/screenshots/**/*.png
+    expire_in: 1 day
 
