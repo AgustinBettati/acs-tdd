@@ -6,9 +6,8 @@ import {TableHead} from "@material-ui/core";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
-import IconButton from "@material-ui/core/IconButton";
-import Icon from "@material-ui/core/Icon";
 import Typography from "@material-ui/core/Typography";
+import Button from '@material-ui/core/Button';
 const styles = require('./courseTable.css');
 
 class coursesTable extends React.Component<IProps, IStateHome> {
@@ -72,21 +71,19 @@ class coursesTable extends React.Component<IProps, IStateHome> {
                                         <TableCell>{row.platform}</TableCell>
                                         <TableCell>{row.link}</TableCell>
                                         <TableCell>
-                                            {/*<Link to={`/admin/${row.id}`}>*/}
-                                            {/*    <IconButton>*/}
-                                            {/*        <Edit/>*/}
-                                            {/*    </IconButton>*/}
-                                            {/*</Link>*/}
-
-                                            <IconButton onClick={() => this.handleEditCourse(row.id)}><Icon>edit_icon</Icon></IconButton>
+                                            <Button variant="contained" onClick={() => this.handleEditCourse(row.id)}>Edit</Button>
+                                            {/*<IconButton onClick={() => this.handleEditCourse(row.id)}></IconButton>*/}
                                         </TableCell>
                                     </TableRow>
                                 );
                             })
                         }
-
                     </TableBody>
                 </table>
+
+                <div className="clase-boton">
+                    <Button variant="contained" color="primary" onClick={() => this.setState({redirect: '/course'})}>Add course</Button>
+                </div>
             </div>
         );
     }
