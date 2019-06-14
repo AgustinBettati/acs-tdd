@@ -116,5 +116,7 @@ test:integration:
     when: always
     paths:
       - $CI_PROJECT_DIR/frontend/cypress/videos/**/*.mp4
+      - $CI_PROJECT_DIR/frontend/cypress/videos/*.mp4
       - $CI_PROJECT_DIR/frontend/cypress/screenshots/**/*.png
+      - $CI_PROJECT_DIR/frontend/cypress/screenshots/*.png
     expire_in: 1 day
