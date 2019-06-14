@@ -114,7 +114,7 @@ describe('Course test', function () {
 
         });
         it('should visit home page and show created course', function () {
-            cy.visit('http://localhost:3000/home');
+            cy.visit('/home');
 
             cy.contains("Matematica");
             cy.contains("Platform");
@@ -122,7 +122,7 @@ describe('Course test', function () {
         });
 
         it('should visit home page and edit created course', function () {
-            cy.visit('http://localhost:3000/home');
+            cy.visit('/home');
             cy.get('[data-cy="Matematica"]').click();
             cy.wait(200);
             cy.url().should('include', '/update');
@@ -167,7 +167,7 @@ describe('Course test', function () {
 
         });
         it('should render components with values', function () {
-            cy.visit('http://localhost:3000/home');
+            cy.visit('/home');
             cy.get('[data-cy="Matematica"]').click();
             cy.wait(200);
 
@@ -178,7 +178,7 @@ describe('Course test', function () {
         });
 
         it('should fail when empty name', function () {
-            cy.visit('http://localhost:3000/home');
+            cy.visit('/home');
             cy.get('[data-cy="Matematica"]').click();
             cy.wait(200);
 
@@ -201,7 +201,7 @@ describe('Course test', function () {
         });
 
         it('should fail when empty description', function () {
-            cy.visit('http://localhost:3000/home');
+            cy.visit('/home');
             cy.get('[data-cy="Matematica"]').click();
             cy.wait(200);
 
@@ -222,7 +222,7 @@ describe('Course test', function () {
         });
 
         it('should fail when empty platform', function () {
-            cy.visit('http://localhost:3000/home');
+            cy.visit('/home');
             cy.get('[data-cy="Matematica"]').click();
             cy.wait(200);
 
@@ -239,7 +239,7 @@ describe('Course test', function () {
 
 
         it('should fail when invalid link', function () {
-            cy.visit('http://localhost:3000/home');
+            cy.visit('/home');
             cy.get('[data-cy="Matematica"]').click();
             cy.wait(200);
 
