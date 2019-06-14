@@ -48,6 +48,9 @@ public class CourseService {
         return courseRepository.existsExternalCourseByName(name);
     }
 
+    public void deleteAll() {
+        courseRepository.deleteAll();
+    }
 }
 
 

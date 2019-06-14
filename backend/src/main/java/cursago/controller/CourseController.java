@@ -71,4 +71,15 @@ public class CourseController {
                 .map(found -> new ResponseEntity<>(found, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+
+    @GetMapping(value = "/course/delete/all")
+    @CrossOrigin(origins = {"http://localhost:3000","http://localhost:4326"})
+    public ResponseEntity deleteAll() {
+        courseService.deleteAll();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
 }

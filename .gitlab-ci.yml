@@ -10,7 +10,7 @@ variables:
   CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
   APT_CACHE_DIR: "$CI_PROJECT_DIR/apt-cache"
-  # CYPRESS_BASE_URL: http://localhost:4326
+  CYPRESS_BASE_URL: http://localhost:4326
   CYPRESS_PAGE_LOAD_TIMEOUT: 400000
   
 
@@ -31,7 +31,7 @@ stages:
 build:frontend:
   image: node:12.3.1
   stage: frontend_test_build_artifacts
-  script: cd frontend && npm ci && npm test &&  npm run build
+  script: cd frontend && npm ci &&  npm run build
   artifacts:
     name: frontend_build
     paths: 
@@ -84,7 +84,7 @@ deploy:gitlab_registry:
     - build:backend
 
 
-.test:integration:
+test:integration:
   image: cypress/browsers:chrome67
   stage: test_integration
   # script: java -jar backend/build/libs/backend-0.0.1.jar 
