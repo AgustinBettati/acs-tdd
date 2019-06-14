@@ -10,7 +10,7 @@ variables:
   CYPRESS_CACHE_FOLDER: "$CI_PROJECT_DIR/cache/Cypress"
   GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
   APT_CACHE_DIR: "$CI_PROJECT_DIR/apt-cache"
-  # CYPRESS_BASE_URL: http://localhost:4326
+  CYPRESS_BASE_URL: http://localhost:4326
   CYPRESS_PAGE_LOAD_TIMEOUT: 400000
   
 
