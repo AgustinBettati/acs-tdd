@@ -56,20 +56,22 @@ describe('course test', function () {
             cy.url().should('include', '/update');
 
             cy.contains("Edit course");
-            const id = cy.get('[id="course-name"]');
-            id.type('Matematica Avanzada');
-            const description = cy.get('[id="course-description"]');
-            description.type('This is a new description description');
-            cy.get('[id="course-platform"]').type('new platform');
-            cy.get('[id="course-link"]').type('www.newLink.com');
+            const courseName = cy.get('[id="course-name"]').clear();
+            courseName.type('Matematica Avanzada');
+            const description = cy.get('[id="course-description"]').clear();
+            description.type('This is a new description');
+            const platform = cy.get('[id="course-platform"]').clear();
+            platform.type('new platform');
+            const link = cy.get('[id="course-link"]').clear();
+            link.type('www.newlink.com');
+            cy.wait(200);
             cy.get('[id="submit-button"]').click();
 
             cy.wait(200);
             cy.url().should('include', '/home');
             cy.contains('Matematica Avanzada');
-            cy.contains('This is a new description description');
             cy.contains('new platform');
-            cy.contains('www.newLink.com');
+            cy.contains('www.newlink.com');
 
 
         });
