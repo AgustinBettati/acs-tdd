@@ -84,7 +84,7 @@ deploy:gitlab_registry:
     - build:backend
 
 
-.test:integration:
+test:integration:
   image: cypress/browsers:chrome67
   stage: test_integration
   # script: java -jar backend/build/libs/backend-0.0.1.jar
