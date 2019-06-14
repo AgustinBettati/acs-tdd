@@ -30,11 +30,10 @@ public class ExternalCourse {
 
     @Column(name = "link")
     @NotNull
-    @Pattern(regexp = "https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,}", flags = Pattern.Flag.CASE_INSENSITIVE, message = "Invalid link")
+    @Pattern(regexp = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]", flags = Pattern.Flag.CASE_INSENSITIVE, message = "Invalid link")
     private String link;
 
     @Column(name = "sharedInTwitter")
-    @NotNull
     private boolean sharedInTwitter;
 
     public String getId() {
