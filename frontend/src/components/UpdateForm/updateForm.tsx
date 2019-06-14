@@ -162,14 +162,40 @@ class updateForm extends React.Component<IProps, IState> {
     };
 
     validate = (field: string, value: any): boolean => {
-        if (field === 'link') {
-            return (
-                this.validateLink(value)
-            );
-        } else {
-            return true;
+        switch (field) {
+            case 'name':
+                return (
+                    this.validateName(value)
+                );
+            case 'description':
+                return (
+                    this.validateDescription(value)
+                );
+            case 'platform':
+                return (
+                    this.validatePlatform(value)
+                );
+            case 'link':
+                return (
+                    this.validateLink(value)
+                );
+            default:
+                return true;
         }
     };
+
+    private validateName(value: any) {
+        return value !== undefined && value !== "";
+    }
+
+    private validatePlatform(value: any) {
+        return ['Coursera', 'Udemy', 'edX', 'YouTube'].includes(value);
+    }
+
+    private validateDescription(value: any) {
+        return value !== undefined && value !== "";
+    }
+
 
     validateLink = (value: any): boolean => {
         const regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;

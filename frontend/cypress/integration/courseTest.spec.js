@@ -171,10 +171,11 @@ describe('Course test', function () {
             cy.get('[data-cy="Matematica"]').click();
             cy.wait(200);
 
-            cy.get('[id="course-name"]').invoke('val');
-            cy.contains('This is a description');
-            cy.contains("Udemy");
-            cy.contains("https://github.com/AgustinBettati/acs-tdd/commits/master");
+            cy.get('[id="course-name"]').should('have.value', 'Matematica');
+            cy.get('[id="course-description"]').should('have.value', 'This is a description');
+            cy.get('[id="course-link"]').should('have.value', 'https://github.com/AgustinBettati/acs-tdd/commits/master');
+            cy.get('[id="course-platform"]').should('have.value', 'Udemy');
+
         });
 
         it('should fail when empty name', function () {
@@ -227,8 +228,7 @@ describe('Course test', function () {
             cy.wait(200);
 
             cy.contains("Edit course");
-            const link = cy.get('[id="course-link"]').clear();
-            link.type('https://github.com/AgustinBettati/acs-tdd/commits/master');
+            cy.get('[id="course-platform"]').clear();
             cy.wait(200);
             cy.get('[id="submit-button"]').click();
 
