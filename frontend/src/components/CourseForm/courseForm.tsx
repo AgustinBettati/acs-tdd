@@ -223,7 +223,7 @@ class courseForm extends React.Component<IProps, IState> {
                                                     error={errors.name}
                                                     onChange={this.handleChange('name')}
                                                 />
-                                                <this.Pifie hasError={errors.platform} msg={'Invalid name'}/>
+                                                <this.Pifie hasError={errors.platform} msg='Invalid name'/>
                                                 <TextField
                                                     variant="outlined"
                                                     margin="normal"
@@ -236,7 +236,7 @@ class courseForm extends React.Component<IProps, IState> {
                                                     error={errors.description}
                                                     onChange={this.handleChange('description')}
                                                 />
-                                                <this.Pifie hasError={errors.platform} msg={'Invalid description'}/>
+                                                <this.Pifie hasError={errors.platform} msg='Invalid description'/>
                                                 <TextField
                                                     variant="outlined"
                                                     margin="normal"
@@ -249,7 +249,7 @@ class courseForm extends React.Component<IProps, IState> {
                                                     error={errors.platform}
                                                     onChange={this.handleChange('platform')}
                                                 />
-                                                <this.Pifie hasError={errors.platform} msg={'Invalid platform'}/>
+                                                <this.Pifie hasError={errors.platform} msg='Invalid platform'/>
                                                 <TextField
                                                     variant="outlined"
                                                     margin="normal"
@@ -290,10 +290,12 @@ class courseForm extends React.Component<IProps, IState> {
         );
     }
 
-    public Pifie(props, msg) {
+    public Pifie(props) {
         if (props.hasError) {
             return (
-                <div>{msg}</div>
+                <div>
+                    {props.msg}
+                </div>
             )
         }
         return <div></div>
