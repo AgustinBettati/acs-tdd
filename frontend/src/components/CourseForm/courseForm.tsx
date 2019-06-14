@@ -128,12 +128,21 @@ class courseForm extends React.Component<IProps, IState> {
     };
 
     validate = (field: string, value: any): boolean => {
-        if (field === 'link') {
-            return (
-                this.validateLink(value)
-            );
-        } else {
-            return true;
+        switch (field) {
+            case 'link':
+                return (
+                  this.validateLink(value)
+                );
+            case 'name':
+                return (
+                  this.validateName(value)
+                );
+            case 'platform':
+                return (
+                  this.validatePlatform(value)
+                );
+            default:
+                return true;
         }
     };
 
@@ -234,6 +243,7 @@ class courseForm extends React.Component<IProps, IState> {
                                                     error={errors.platform}
                                                     onChange={this.handleChange('platform')}
                                                 />
+                                                <Pifie hasError={errors.platform}/>
                                                 <TextField
                                                     variant="outlined"
                                                     margin="normal"
@@ -271,6 +281,22 @@ class courseForm extends React.Component<IProps, IState> {
                 </div>
             </Container>
         );
+    }
+
+    public Pifie(props) {
+        if (props.hasError) {
+            return (
+                <div>The platform is invalid</div>
+            )
+        }
+    }
+
+    private validateName(value: any) {
+        return value !== undefined;
+    }
+
+    private validatePlatform(value: any) {
+        return ['Coursera', 'Udemy', 'edX', 'YouTube'].includes(value);
     }
 }
 
