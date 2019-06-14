@@ -223,7 +223,7 @@ class courseForm extends React.Component<IProps, IState> {
                                                     error={errors.name}
                                                     onChange={this.handleChange('name')}
                                                 />
-                                                <this.Pifie hasError={errors.platform} msg='Invalid name'/>
+                                                <this.Pifie hasError={errors.name} msg='Invalid name'/>
                                                 <TextField
                                                     variant="outlined"
                                                     margin="normal"
@@ -236,7 +236,7 @@ class courseForm extends React.Component<IProps, IState> {
                                                     error={errors.description}
                                                     onChange={this.handleChange('description')}
                                                 />
-                                                <this.Pifie hasError={errors.platform} msg='Invalid description'/>
+                                                <this.Pifie hasError={errors.description} msg='Invalid description'/>
                                                 <TextField
                                                     variant="outlined"
                                                     margin="normal"
@@ -262,7 +262,7 @@ class courseForm extends React.Component<IProps, IState> {
                                                     error={errors.link}
                                                     onChange={this.handleChange('link')}
                                                 />
-                                                <this.Pifie hasError={errors.platform} msg={'Invalid link'}/>
+                                                <this.Pifie hasError={errors.link} msg={'Invalid link'}/>
                                             </form>
                                         </CardContent>
                                     </Grid>
@@ -302,7 +302,7 @@ class courseForm extends React.Component<IProps, IState> {
     }
 
     private validateName(value: any) {
-        return value !== undefined;
+        return value !== undefined && value !== "";;
     }
 
     private validatePlatform(value: any) {
@@ -310,7 +310,7 @@ class courseForm extends React.Component<IProps, IState> {
     }
 
     private validateDescription(value: any) {
-        return value !== undefined;
+        return value !== undefined && value !== "";
     }
 }
 

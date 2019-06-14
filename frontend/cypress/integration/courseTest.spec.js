@@ -56,7 +56,7 @@ describe('Course test', function () {
             cy.get('[id="course-link"]').type('www.link.com');
             cy.get('[id="submit-button"]').click();
 
-            cy.url().should('include', '/home');
+            cy.url().should('include', '/course');
 
             cy.contains("Invalid platform");
 
@@ -73,7 +73,7 @@ describe('Course test', function () {
             cy.get('[id="course-link"]').type('www.link.com');
             cy.get('[id="submit-button"]').click();
 
-            cy.url().should('include', '/home');
+            cy.url().should('include', '/course');
 
             cy.contains("Invalid description");
 
@@ -89,7 +89,7 @@ describe('Course test', function () {
             cy.get('[id="course-link"]').type('www.link.com');
             cy.get('[id="submit-button"]').click();
 
-            cy.url().should('include', '/home');
+            cy.url().should('include', '/course');
 
             cy.contains("Invalid name");
 
@@ -109,7 +109,7 @@ describe('Course test', function () {
             cy.get('[id="course-name"]').type('Matematica');
             cy.get('[id="course-description"]').type('This is a description');
             cy.get('[id="course-platform"]').type('Udemy');
-            cy.get('[id="course-link"]').type('www.link.com');
+            cy.get('[id="course-link"]').type('https://github.com/AgustinBettati/acs-tdd/commits/master');
             cy.get('[id="submit-button"]').click();
 
         });
@@ -118,7 +118,7 @@ describe('Course test', function () {
 
             cy.contains("Matematica");
             cy.contains("Udemy");
-            cy.contains("www.link.com");
+            cy.contains("https://github.com/AgustinBettati/acs-tdd/commits/master");
         });
 
         it('should visit home page and edit created course', function () {
@@ -135,7 +135,7 @@ describe('Course test', function () {
             const platform = cy.get('[id="course-platform"]').clear();
             platform.type('edX');
             const link = cy.get('[id="course-link"]').clear();
-            link.type('www.newlink.com');
+            link.type('https://drive.google.com/drive/u/1/my-drive');
             cy.wait(200);
             cy.get('[id="submit-button"]').click();
 
@@ -143,7 +143,7 @@ describe('Course test', function () {
             cy.url().should('include', '/home');
             cy.contains('Matematica Avanzada');
             cy.contains('edX');
-            cy.contains('www.newlink.com');
+            cy.contains('https://drive.google.com/drive/u/1/my-drive');
 
 
         });
@@ -162,7 +162,7 @@ describe('Course test', function () {
             cy.get('[id="course-name"]').type('Matematica');
             cy.get('[id="course-description"]').type('This is a description');
             cy.get('[id="course-platform"]').type('Udemy');
-            cy.get('[id="course-link"]').type('www.link.com');
+            cy.get('[id="course-link"]').type('https://github.com/AgustinBettati/acs-tdd/commits/master');
             cy.get('[id="submit-button"]').click();
 
         });
@@ -174,7 +174,7 @@ describe('Course test', function () {
             cy.contains("Matematica");
             cy.contains('This is a description');
             cy.contains("Udemy");
-            cy.contains("www.link.com");
+            cy.contains("https://github.com/AgustinBettati/acs-tdd/commits/master");
         });
 
         it('should fail when empty name', function () {
@@ -189,7 +189,7 @@ describe('Course test', function () {
             const platform = cy.get('[id="course-platform"]').clear();
             platform.type('Coursera');
             const link = cy.get('[id="course-link"]').clear();
-            link.type('www.newlink.com');
+            link.type('https://github.com/AgustinBettati/acs-tdd/commits/master');
             cy.wait(200);
             cy.get('[id="submit-button"]').click();
 
@@ -210,7 +210,7 @@ describe('Course test', function () {
             const platform = cy.get('[id="course-platform"]').clear();
             platform.type('Coursera');
             const link = cy.get('[id="course-link"]').clear();
-            link.type('www.newlink.com');
+            link.type('https://github.com/AgustinBettati/acs-tdd/commits/master');
             cy.wait(200);
             cy.get('[id="submit-button"]').click();
 
@@ -228,7 +228,7 @@ describe('Course test', function () {
 
             cy.contains("Edit course");
             const link = cy.get('[id="course-link"]').clear();
-            link.type('www.newlink.com');
+            link.type('https://github.com/AgustinBettati/acs-tdd/commits/master');
             cy.wait(200);
             cy.get('[id="submit-button"]').click();
 
