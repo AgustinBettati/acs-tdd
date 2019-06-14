@@ -1,5 +1,10 @@
 describe('Course test', function () {
 
+    before(() => {
+            cy.wait(2000);
+        }
+    );
+
     describe('Home page', function () {
         it('should render all components', function () {
             cy.visit('/home');
