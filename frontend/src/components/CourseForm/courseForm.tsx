@@ -129,17 +129,21 @@ class courseForm extends React.Component<IProps, IState> {
 
     validate = (field: string, value: any): boolean => {
         switch (field) {
-            case 'link':
-                return (
-                  this.validateLink(value)
-                );
             case 'name':
                 return (
                   this.validateName(value)
                 );
+            case 'description':
+                return (
+                  this.validateDescription(value)
+                );
             case 'platform':
                 return (
                   this.validatePlatform(value)
+                );
+            case 'link':
+                return (
+                  this.validateLink(value)
                 );
             default:
                 return true;
@@ -219,6 +223,7 @@ class courseForm extends React.Component<IProps, IState> {
                                                     error={errors.name}
                                                     onChange={this.handleChange('name')}
                                                 />
+                                                <this.Pifie hasError={errors.platform} msg={'Invalid name'}/>
                                                 <TextField
                                                     variant="outlined"
                                                     margin="normal"
@@ -231,6 +236,7 @@ class courseForm extends React.Component<IProps, IState> {
                                                     error={errors.description}
                                                     onChange={this.handleChange('description')}
                                                 />
+                                                <this.Pifie hasError={errors.platform} msg={'Invalid description'}/>
                                                 <TextField
                                                     variant="outlined"
                                                     margin="normal"
@@ -243,7 +249,7 @@ class courseForm extends React.Component<IProps, IState> {
                                                     error={errors.platform}
                                                     onChange={this.handleChange('platform')}
                                                 />
-                                                <Pifie hasError={errors.platform}/>
+                                                <this.Pifie hasError={errors.platform} msg={'Invalid platform'}/>
                                                 <TextField
                                                     variant="outlined"
                                                     margin="normal"
@@ -256,6 +262,7 @@ class courseForm extends React.Component<IProps, IState> {
                                                     error={errors.link}
                                                     onChange={this.handleChange('link')}
                                                 />
+                                                <this.Pifie hasError={errors.platform} msg={'Invalid link'}/>
                                             </form>
                                         </CardContent>
                                     </Grid>
@@ -283,12 +290,13 @@ class courseForm extends React.Component<IProps, IState> {
         );
     }
 
-    public Pifie(props) {
+    public Pifie(props, msg) {
         if (props.hasError) {
             return (
-                <div>The platform is invalid</div>
+                <div>{msg}</div>
             )
         }
+        return <div></div>
     }
 
     private validateName(value: any) {
@@ -297,6 +305,10 @@ class courseForm extends React.Component<IProps, IState> {
 
     private validatePlatform(value: any) {
         return ['Coursera', 'Udemy', 'edX', 'YouTube'].includes(value);
+    }
+
+    private validateDescription(value: any) {
+        return value !== undefined;
     }
 }
 

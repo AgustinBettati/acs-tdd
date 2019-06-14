@@ -25,7 +25,7 @@ describe('Course test', function () {
 
             cy.get('[id="course-name"]').type('Matematica');
             cy.get('[id="course-description"]').type('This is a description');
-            cy.get('[id="course-platform"]').type('Platform');
+            cy.get('[id="course-platform"]').type('Udemy');
             cy.get('[id="course-link"]').type('www.link.com');
             cy.get('[id="submit-button"]').click();
 
@@ -38,13 +38,12 @@ describe('Course test', function () {
             cy.contains("Create course");
             cy.get('[id="course-name"]').type('Matematica');
             cy.get('[id="course-description"]').type('This is a description');
-            cy.get('[id="course-platform"]').type('Platform');
+            cy.get('[id="course-platform"]').type('Udemy');
             cy.get('[id="course-link"]').type('no es un link');
             cy.get('[id="submit-button"]').click();
             cy.url().should('include', '/course');
 
-
-            // cy.contains("Invalid link");
+            cy.contains("Invalid link");
             cy.contains("Create course")
         });
 
@@ -59,7 +58,7 @@ describe('Course test', function () {
 
             cy.url().should('include', '/home');
 
-            // cy.contains("Invalid platform");
+            cy.contains("Invalid platform");
 
 
             cy.contains("Create course")
@@ -70,29 +69,29 @@ describe('Course test', function () {
 
             cy.contains("Create course");
             cy.get('[id="course-name"]').type('Matematica');
-            cy.get('[id="course-platform"]').type('plat');
+            cy.get('[id="course-platform"]').type('Udemy');
             cy.get('[id="course-link"]').type('www.link.com');
             cy.get('[id="submit-button"]').click();
 
             cy.url().should('include', '/home');
 
-            // cy.contains("Invalid description");
+            cy.contains("Invalid description");
 
             cy.contains("Create course")
         });
 
-        it('should register a course with invalid empty description show error', function () {
+        it('should register a course with invalid empty name show error', function () {
             cy.visit('/course');
 
             cy.contains("Create course");
             cy.get('[id="course-description"]').type('This is a description');
-            cy.get('[id="course-platform"]').type('plat');
+            cy.get('[id="course-platform"]').type('Udemy');
             cy.get('[id="course-link"]').type('www.link.com');
             cy.get('[id="submit-button"]').click();
 
             cy.url().should('include', '/home');
 
-            // cy.contains("Invalid name");
+            cy.contains("Invalid name");
 
             cy.contains("Create course")
         });
@@ -100,6 +99,7 @@ describe('Course test', function () {
             cy.request('GET', 'http://localhost:4326/api/course/delete/all')
         });
     });
+
     describe('When already created course', function () {
         before(() => {
             cy.request('GET', 'http://localhost:4326/api/course/delete/all');
@@ -108,7 +108,7 @@ describe('Course test', function () {
 
             cy.get('[id="course-name"]').type('Matematica');
             cy.get('[id="course-description"]').type('This is a description');
-            cy.get('[id="course-platform"]').type('Platform');
+            cy.get('[id="course-platform"]').type('Udemy');
             cy.get('[id="course-link"]').type('www.link.com');
             cy.get('[id="submit-button"]').click();
 
@@ -117,7 +117,7 @@ describe('Course test', function () {
             cy.visit('/home');
 
             cy.contains("Matematica");
-            cy.contains("Platform");
+            cy.contains("Udemy");
             cy.contains("www.link.com");
         });
 
@@ -133,7 +133,7 @@ describe('Course test', function () {
             const description = cy.get('[id="course-description"]').clear();
             description.type('This is a new description');
             const platform = cy.get('[id="course-platform"]').clear();
-            platform.type('new platform');
+            platform.type('edX');
             const link = cy.get('[id="course-link"]').clear();
             link.type('www.newlink.com');
             cy.wait(200);
@@ -142,7 +142,7 @@ describe('Course test', function () {
             cy.wait(200);
             cy.url().should('include', '/home');
             cy.contains('Matematica Avanzada');
-            cy.contains('new platform');
+            cy.contains('edX');
             cy.contains('www.newlink.com');
 
 
@@ -161,7 +161,7 @@ describe('Course test', function () {
 
             cy.get('[id="course-name"]').type('Matematica');
             cy.get('[id="course-description"]').type('This is a description');
-            cy.get('[id="course-platform"]').type('Platform');
+            cy.get('[id="course-platform"]').type('Udemy');
             cy.get('[id="course-link"]').type('www.link.com');
             cy.get('[id="submit-button"]').click();
 
@@ -173,7 +173,7 @@ describe('Course test', function () {
 
             cy.contains("Matematica");
             cy.contains('This is a description');
-            cy.contains("Platform");
+            cy.contains("Udemy");
             cy.contains("www.link.com");
         });
 
@@ -187,7 +187,7 @@ describe('Course test', function () {
             const description = cy.get('[id="course-description"]').clear();
             description.type('This is a new description');
             const platform = cy.get('[id="course-platform"]').clear();
-            platform.type('new platform');
+            platform.type('Coursera');
             const link = cy.get('[id="course-link"]').clear();
             link.type('www.newlink.com');
             cy.wait(200);
@@ -195,7 +195,7 @@ describe('Course test', function () {
 
             cy.wait(200);
             cy.url().should('include', '/update');
-            // cy.contains('Invalid name');
+            cy.contains('Invalid name');
 
 
         });
@@ -208,7 +208,7 @@ describe('Course test', function () {
             cy.contains("Edit course");
             const description = cy.get('[id="course-description"]').clear();
             const platform = cy.get('[id="course-platform"]').clear();
-            platform.type('new platform');
+            platform.type('Coursera');
             const link = cy.get('[id="course-link"]').clear();
             link.type('www.newlink.com');
             cy.wait(200);
@@ -216,7 +216,7 @@ describe('Course test', function () {
 
             cy.wait(200);
             cy.url().should('include', '/update');
-            // cy.contains('Invalid description');
+            cy.contains('Invalid description');
 
 
         });
@@ -234,7 +234,7 @@ describe('Course test', function () {
 
             cy.wait(200);
             cy.url().should('include', '/update');
-            // cy.contains('Invalid platform');
+            cy.contains('Invalid platform');
         });
 
 
@@ -251,7 +251,7 @@ describe('Course test', function () {
 
             cy.wait(200);
             cy.url().should('include', '/update');
-            // cy.contains('Invalid link');
+            cy.contains('Invalid link');
         });
         after(() => {
             cy.request('GET', 'http://localhost:4326/api/course/delete/all')
