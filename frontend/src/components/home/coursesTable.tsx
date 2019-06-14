@@ -71,7 +71,7 @@ class coursesTable extends React.Component<IProps, IStateHome> {
                                         <TableCell>{row.platform}</TableCell>
                                         <TableCell>{row.link}</TableCell>
                                         <TableCell>
-                                            <Button variant="contained" onClick={() => this.handleEditCourse(row.id)}>Edit</Button>
+                                            <Button data-cy = {row.name} variant="contained" onClick={() => this.handleEditCourse(row.id)}>Edit</Button>
                                             {/*<IconButton onClick={() => this.handleEditCourse(row.id)}></IconButton>*/}
                                         </TableCell>
                                     </TableRow>
