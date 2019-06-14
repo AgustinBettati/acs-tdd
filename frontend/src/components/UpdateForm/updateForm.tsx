@@ -206,6 +206,17 @@ class updateForm extends React.Component<IProps, IState> {
         </div>
     };
 
+    public Pifie(props) {
+        if (props.hasError) {
+            return (
+                <div>
+                    {props.msg}
+                </div>
+            )
+        }
+        return <div></div>
+    }
+
     render() {
         const {fields, errors, isCreating, redirect} = this.state;
 
@@ -245,6 +256,7 @@ class updateForm extends React.Component<IProps, IState> {
                                                     error={errors.name}
                                                     onChange={this.handleChange('name')}
                                                 />
+                                                <this.Pifie hasError={errors.name} msg='Invalid name'/>
                                                 <TextField
                                                     variant="outlined"
                                                     margin="normal"
@@ -257,6 +269,7 @@ class updateForm extends React.Component<IProps, IState> {
                                                     error={errors.description}
                                                     onChange={this.handleChange('description')}
                                                 />
+                                                <this.Pifie hasError={errors.description} msg='Invalid description'/>
                                                 <TextField
                                                     variant="outlined"
                                                     margin="normal"
@@ -269,6 +282,7 @@ class updateForm extends React.Component<IProps, IState> {
                                                     error={errors.platform}
                                                     onChange={this.handleChange('platform')}
                                                 />
+                                                <this.Pifie hasError={errors.platform} msg='Invalid platform'/>
                                                 <TextField
                                                     variant="outlined"
                                                     margin="normal"
@@ -281,6 +295,7 @@ class updateForm extends React.Component<IProps, IState> {
                                                     error={errors.link}
                                                     onChange={this.handleChange('link')}
                                                 />
+                                                <this.Pifie hasError={errors.link} msg='Invalid link'/>
                                             </form>
                                         </CardContent>
                                     </Grid>

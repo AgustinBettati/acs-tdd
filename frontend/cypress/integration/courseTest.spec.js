@@ -171,7 +171,7 @@ describe('Course test', function () {
             cy.get('[data-cy="Matematica"]').click();
             cy.wait(200);
 
-            cy.contains("Matematica");
+            cy.get('[id="course-name"]').invoke('val');
             cy.contains('This is a description');
             cy.contains("Udemy");
             cy.contains("https://github.com/AgustinBettati/acs-tdd/commits/master");
