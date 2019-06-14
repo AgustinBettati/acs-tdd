@@ -92,13 +92,13 @@ test:integration:
   #  - name: registry.gitlab.com/david.cerbino/acstdd:test
   #    alias: app
   variables:
-    CYPRESS_BASE_URL: http://127.0.0.1:4326
+    CYPRESS_BASE_URL: http://localhost:4326
 
   before_script: 
-    - apt-get install -y curl \
-      && curl -sL https://deb.nodesource.com/setup_9.x | bash - \
-      && apt-get install -y nodejs \
-      && curl -L https://www.npmjs.com/install.sh | sh \
+    - apt-get install -y curl
+    - curl -sL https://deb.nodesource.com/setup_9.x | bash -
+    - apt-get install -y nodejs
+    - curl -L https://www.npmjs.com/install.sh | sh
     - cd frontend && npm install -g wait-on
     - cd $CI_PROJECT_DIR/frontend && npm install
     # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -t jessie-backports openjdk-8-jre
@@ -112,7 +112,7 @@ test:integration:
      - java -jar $CI_PROJECT_DIR/backend/build/libs/backend-0.0.1.jar & 
      - wait-on  $CYPRESS_BASE_URL
      - CYPRESS_baseUrl=http://localhost:4326
-     - ./node_modules/.bin/cypress run --record --key 09e33c06-8a43-427e-9207-17ef995538a8
+     - $CI_PROJECT_DIR/frontend/node_modules/.bin/cypress run --record --key 09e33c06-8a43-427e-9207-17ef995538a8
   dependencies:
     - build:backend
   artifacts:

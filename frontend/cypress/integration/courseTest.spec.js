@@ -42,24 +42,60 @@ describe('Course test', function () {
             cy.get('[id="course-link"]').type('no es un link');
             cy.get('[id="submit-button"]').click();
             cy.url().should('include', '/course');
+
+
+            // cy.contains("Invalid link");
             cy.contains("Create course")
         });
 
-        // it('should register a course with invalid empty platform show error', function () {
-        //     cy.visit('/course');
-        //
-        //     cy.contains("Create course");
-        //     cy.get('[id="course-description"]').type('This is a description');
-        //     cy.get('[id="course-platform"]').type('plat');
-        //     cy.get('[id="course-link"]').type('www.link.com');
-        //     cy.get('[id="submit-button"]').click();
-        //
-        //     cy.url().should('include', '/home');
-        //
-        //
-        //
-        //     cy.contains("Create course")
-        // });
+        it('should register a course with invalid empty platform show error', function () {
+            cy.visit('/course');
+
+            cy.contains("Create course");
+            cy.get('[id="course-name"]').type('Matematica');
+            cy.get('[id="course-description"]').type('This is a description');
+            cy.get('[id="course-link"]').type('www.link.com');
+            cy.get('[id="submit-button"]').click();
+
+            cy.url().should('include', '/home');
+
+            // cy.contains("Invalid platform");
+
+
+            cy.contains("Create course")
+        });
+
+        it('should register a course with invalid empty description show error', function () {
+            cy.visit('/course');
+
+            cy.contains("Create course");
+            cy.get('[id="course-name"]').type('Matematica');
+            cy.get('[id="course-platform"]').type('plat');
+            cy.get('[id="course-link"]').type('www.link.com');
+            cy.get('[id="submit-button"]').click();
+
+            cy.url().should('include', '/home');
+
+            // cy.contains("Invalid description");
+
+            cy.contains("Create course")
+        });
+
+        it('should register a course with invalid empty description show error', function () {
+            cy.visit('/course');
+
+            cy.contains("Create course");
+            cy.get('[id="course-description"]').type('This is a description');
+            cy.get('[id="course-platform"]').type('plat');
+            cy.get('[id="course-link"]').type('www.link.com');
+            cy.get('[id="submit-button"]').click();
+
+            cy.url().should('include', '/home');
+
+            // cy.contains("Invalid name");
+
+            cy.contains("Create course")
+        });
         after(() => {
             cy.request('GET', 'http://localhost:4326/api/course/delete/all')
         });
@@ -78,7 +114,7 @@ describe('Course test', function () {
 
         });
         it('should visit home page and show created course', function () {
-            cy.visit('http://localhost:3000/home');
+            cy.visit('/home');
 
             cy.contains("Matematica");
             cy.contains("Platform");
@@ -86,7 +122,7 @@ describe('Course test', function () {
         });
 
         it('should visit home page and edit created course', function () {
-            cy.visit('http://localhost:3000/home');
+            cy.visit('/home');
             cy.get('[data-cy="Matematica"]').click();
             cy.wait(200);
             cy.url().should('include', '/update');
@@ -112,6 +148,111 @@ describe('Course test', function () {
 
         });
 
+        after(() => {
+            cy.request('GET', 'http://localhost:4326/api/course/delete/all')
+        });
+    });
+
+    describe('When editing course', function () {
+        before(() => {
+            cy.request('GET', 'http://localhost:4326/api/course/delete/all');
+
+            cy.visit('/course');
+
+            cy.get('[id="course-name"]').type('Matematica');
+            cy.get('[id="course-description"]').type('This is a description');
+            cy.get('[id="course-platform"]').type('Platform');
+            cy.get('[id="course-link"]').type('www.link.com');
+            cy.get('[id="submit-button"]').click();
+
+        });
+        it('should render components with values', function () {
+            cy.visit('/home');
+            cy.get('[data-cy="Matematica"]').click();
+            cy.wait(200);
+
+            cy.contains("Matematica");
+            cy.contains('This is a description');
+            cy.contains("Platform");
+            cy.contains("www.link.com");
+        });
+
+        it('should fail when empty name', function () {
+            cy.visit('/home');
+            cy.get('[data-cy="Matematica"]').click();
+            cy.wait(200);
+
+            cy.contains("Edit course");
+            cy.get('[id="course-name"]').clear();
+            const description = cy.get('[id="course-description"]').clear();
+            description.type('This is a new description');
+            const platform = cy.get('[id="course-platform"]').clear();
+            platform.type('new platform');
+            const link = cy.get('[id="course-link"]').clear();
+            link.type('www.newlink.com');
+            cy.wait(200);
+            cy.get('[id="submit-button"]').click();
+
+            cy.wait(200);
+            cy.url().should('include', '/update');
+            // cy.contains('Invalid name');
+
+
+        });
+
+        it('should fail when empty description', function () {
+            cy.visit('/home');
+            cy.get('[data-cy="Matematica"]').click();
+            cy.wait(200);
+
+            cy.contains("Edit course");
+            const description = cy.get('[id="course-description"]').clear();
+            const platform = cy.get('[id="course-platform"]').clear();
+            platform.type('new platform');
+            const link = cy.get('[id="course-link"]').clear();
+            link.type('www.newlink.com');
+            cy.wait(200);
+            cy.get('[id="submit-button"]').click();
+
+            cy.wait(200);
+            cy.url().should('include', '/update');
+            // cy.contains('Invalid description');
+
+
+        });
+
+        it('should fail when empty platform', function () {
+            cy.visit('/home');
+            cy.get('[data-cy="Matematica"]').click();
+            cy.wait(200);
+
+            cy.contains("Edit course");
+            const link = cy.get('[id="course-link"]').clear();
+            link.type('www.newlink.com');
+            cy.wait(200);
+            cy.get('[id="submit-button"]').click();
+
+            cy.wait(200);
+            cy.url().should('include', '/update');
+            // cy.contains('Invalid platform');
+        });
+
+
+        it('should fail when invalid link', function () {
+            cy.visit('/home');
+            cy.get('[data-cy="Matematica"]').click();
+            cy.wait(200);
+
+            cy.contains("Edit course");
+            const link = cy.get('[id="course-link"]').clear();
+            link.type('no es un link');
+            cy.wait(200);
+            cy.get('[id="submit-button"]').click();
+
+            cy.wait(200);
+            cy.url().should('include', '/update');
+            // cy.contains('Invalid link');
+        });
         after(() => {
             cy.request('GET', 'http://localhost:4326/api/course/delete/all')
         });
