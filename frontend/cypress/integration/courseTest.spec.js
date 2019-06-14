@@ -1,7 +1,24 @@
-describe('course test', function () {
+describe('Course test', function () {
 
-    describe('Register test', function () {
-        it('register a course and go to home page', function () {
+    describe('Home page', function () {
+        it('should render all components', function () {
+            cy.visit('/home');
+
+            cy.contains("Home");
+            cy.contains("Courses table");
+            cy.contains("Name");
+            cy.contains("Platform");
+            cy.contains("Link");
+            cy.contains("Add course");
+
+        });
+    });
+
+    describe('When creating a course', function () {
+        before(() => {
+            cy.request('GET', 'http://localhost:4326/api/course/delete/all');
+        });
+        it('should register a course and go to home page', function () {
             cy.visit('/course');
 
             cy.contains("Create course");
@@ -15,7 +32,7 @@ describe('course test', function () {
             cy.contains("Home")
         });
 
-        it('register a course with invalid link and show error', function () {
+        it('should register a course with invalid link and show error', function () {
             cy.visit('/course');
 
             cy.contains("Create course");
@@ -24,12 +41,30 @@ describe('course test', function () {
             cy.get('[id="course-platform"]').type('Platform');
             cy.get('[id="course-link"]').type('no es un link');
             cy.get('[id="submit-button"]').click();
-
+            cy.url().should('include', '/course');
             cy.contains("Create course")
         });
-        after(()=> { cy.request('GET', 'http://localhost:4326/api/course/delete/all')});
+
+        // it('should register a course with invalid empty platform show error', function () {
+        //     cy.visit('/course');
+        //
+        //     cy.contains("Create course");
+        //     cy.get('[id="course-description"]').type('This is a description');
+        //     cy.get('[id="course-platform"]').type('plat');
+        //     cy.get('[id="course-link"]').type('www.link.com');
+        //     cy.get('[id="submit-button"]').click();
+        //
+        //     cy.url().should('include', '/home');
+        //
+        //
+        //
+        //     cy.contains("Create course")
+        // });
+        after(() => {
+            cy.request('GET', 'http://localhost:4326/api/course/delete/all')
+        });
     });
-    describe('Already created course test', function () {
+    describe('When already created course', function () {
         before(() => {
             cy.request('GET', 'http://localhost:4326/api/course/delete/all');
 
@@ -47,6 +82,7 @@ describe('course test', function () {
 
             cy.contains("Matematica");
             cy.contains("Platform");
+            cy.contains("www.link.com");
         });
 
         it('should visit home page and edit created course', function () {
@@ -79,5 +115,5 @@ describe('course test', function () {
         after(() => {
             cy.request('GET', 'http://localhost:4326/api/course/delete/all')
         });
-    })    //TODO hacer test para el edit
+    })
 });
