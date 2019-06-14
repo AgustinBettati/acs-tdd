@@ -85,7 +85,7 @@ deploy:gitlab_registry:
 
 
 test:integration:
-  image: cypress/browsers:chrome67
+  image: java:8-jdk
   stage: test_integration
   # script: java -jar backend/build/libs/backend-0.0.1.jar 
   # services:
@@ -95,17 +95,12 @@ test:integration:
     CYPRESS_BASE_URL: http://127.0.0.1:4326
 
   before_script: 
-    - mkdir -pv $APT_CACHE_DIR || true
-    - apt-get update || true
-    - echo "deb http://archive.debian.org/debian/ jessie main" > /etc/apt/sources.list
-    - echo "deb http://security.debian.org jessie/updates main" >> /etc/apt/sources.list
-    - echo "Acquire::Check-Valid-Until false;" | tee -a /etc/apt/apt.conf.d/10-nocheckvalid
-    - echo "deb http://archive.debian.org/debian jessie-backports main" >> /etc/apt/sources.list
-    - echo "deb http://security.debian.org/debian-security jessie/updates main" >> /etc/apt/sources.list
-    - apt-get update  -y|| true
-    - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -t jessie-backports -y openjdk-8-jre
+    - apt-get install -y curl \
+      && curl -sL https://deb.nodesource.com/setup_9.x | bash - \
+      && apt-get install -y nodejs \
+      && curl -L https://www.npmjs.com/install.sh | sh \
     - cd frontend && npm install -g wait-on
-    - cd $CI_PROJECT_DIR/frontend && npm ci
+    - cd $CI_PROJECT_DIR/frontend && npm install
     # - apt-get -o dir::cache::archives="$APT_CACHE_DIR" install -t jessie-backports openjdk-8-jre
     # - apt-get update  -qv|| true
     # - wget -qO - https://adoptopenjdk.jfrog.io/adoptopenjdk/api/gpg/key/public | apt-key add - 
@@ -117,7 +112,7 @@ test:integration:
      - java -jar $CI_PROJECT_DIR/backend/build/libs/backend-0.0.1.jar & 
      - wait-on  $CYPRESS_BASE_URL
      - CYPRESS_baseUrl=http://localhost:4326
-     - $(npm bin)/cypress run --record --key 09e33c06-8a43-427e-9207-17ef995538a8
+     - ./node_modules/.bin/cypress run --record --key 09e33c06-8a43-427e-9207-17ef995538a8
   dependencies:
     - build:backend
   artifacts:
