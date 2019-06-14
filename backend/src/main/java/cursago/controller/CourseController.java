@@ -71,7 +71,4 @@ public class CourseController {
                 .map(found -> new ResponseEntity<>(found, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
-
-
 }
